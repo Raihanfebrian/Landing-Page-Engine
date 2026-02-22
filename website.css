@@ -1,0 +1,511 @@
+/* ========================================
+   WEBSITE ENGINE - SPECIFIC STYLES
+   Extends from style.css
+======================================== */
+
+/* ========================================
+   SOCIAL MEDIA SECTION
+======================================== */
+.social-media-section {
+    margin-top: 8px;
+}
+
+.social-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.social-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.social-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.social-icon svg {
+    width: 22px;
+    height: 22px;
+    color: white;
+}
+
+.social-icon.ig {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+
+.social-icon.wa {
+    background: #25D366;
+}
+
+.social-icon.tiktok {
+    background: #000000;
+}
+
+.social-icon.threads {
+    background: #000000;
+}
+
+.social-icon.linkedin {
+    background: #0A66C2;
+}
+
+.social-icon.facebook {
+    background: #1877F2;
+}
+
+.social-icon.x {
+    background: #000000;
+}
+
+.social-icon.youtube {
+    background: #FF0000;
+}
+
+.social-input {
+    flex: 1;
+}
+
+/* Add Social Button */
+.add-social-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 2px dashed var(--border);
+    background-color: transparent;
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.light-mode .add-social-btn {
+    border-color: var(--border-light);
+    color: var(--text-muted-light);
+}
+
+.add-social-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+.add-social-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Social Options Panel */
+.social-options-panel {
+    background-color: rgba(13, 17, 23, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    animation: slideDown 0.3s ease;
+}
+
+.light-mode .social-options-panel {
+    background-color: rgba(240, 244, 248, 0.8);
+    border-color: var(--border-light);
+}
+
+.social-options-title {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.light-mode .social-options-title {
+    color: var(--text-muted-light);
+}
+
+.social-options-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.social-option-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.light-mode .social-option-item {
+    border-color: var(--border-light);
+}
+
+.social-option-item:hover {
+    border-color: var(--primary);
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+.social-option-item input[type="checkbox"] {
+    display: none;
+}
+
+.social-option-item input[type="checkbox"]:checked + .social-option-icon {
+    box-shadow: 0 0 0 2px var(--primary);
+}
+
+.social-option-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.social-option-icon svg {
+    width: 18px;
+    height: 18px;
+    color: white;
+}
+
+.social-option-icon.tiktok { background: #000; }
+.social-option-icon.threads { background: #000; }
+.social-option-icon.linkedin { background: #0A66C2; }
+.social-option-icon.facebook { background: #1877F2; }
+.social-option-icon.x { background: #000; }
+.social-option-icon.youtube { background: #FF0000; }
+
+.social-option-item span:last-child {
+    font-size: 12px;
+    color: var(--text);
+}
+
+.light-mode .social-option-item span:last-child {
+    color: var(--text-light);
+}
+
+/* Dynamic Social Fields */
+.social-dynamic-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.social-dynamic-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideDown 0.3s ease;
+}
+
+.social-remove-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.social-remove-btn:hover {
+    background-color: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+}
+
+.social-remove-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* ========================================
+   NAVIGATION STYLE SELECTOR
+======================================== */
+.nav-style-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.nav-style-card {
+    padding: 14px 10px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background-color: transparent;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.light-mode .nav-style-card {
+    border-color: var(--border-light);
+}
+
+.nav-style-card:hover {
+    border-color: var(--primary);
+}
+
+.nav-style-card.selected {
+    border: none;
+    background-image: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+    box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.nav-style-card span {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.light-mode .nav-style-card span {
+    color: var(--text-light);
+}
+
+.nav-style-card.selected span {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* ========================================
+   WEBSITE SECTION GRID
+======================================== */
+.ws-section-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.ws-section-card {
+    padding: 14px 10px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background-color: transparent;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.light-mode .ws-section-card {
+    border-color: var(--border-light);
+}
+
+.ws-section-card:hover {
+    border-color: var(--primary);
+}
+
+.ws-section-card.selected {
+    border: none;
+    background-image: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+    box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.ws-section-card span {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.light-mode .ws-section-card span {
+    color: var(--text-light);
+}
+
+.ws-section-card.selected span {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* ========================================
+   LOCKED SECTION CARD
+======================================== */
+.ws-section-card.locked {
+    border: none;
+    background-image: linear-gradient(135deg, #374151, #4b5563);
+    cursor: not-allowed;
+    opacity: 0.8;
+    position: relative;
+}
+
+.ws-section-card.locked:hover {
+    transform: none;
+    border: none;
+}
+
+.ws-section-card.locked span {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+.ws-section-card .lock-icon {
+    width: 14px;
+    height: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 4px;
+}
+
+.ws-section-card.locked {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ========================================
+   WEBSITE ELEMENT GRID
+======================================== */
+.ws-element-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.ws-element-card {
+    padding: 16px 12px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.light-mode .ws-element-card {
+    border-color: var(--border-light);
+}
+
+.ws-element-card:hover {
+    border-color: var(--primary);
+}
+
+.ws-element-card.selected {
+    border: none;
+    background-image: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+    box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.ws-element-card svg {
+    width: 24px;
+    height: 24px;
+    color: var(--text-muted);
+}
+
+.light-mode .ws-element-card svg {
+    color: var(--text-muted-light);
+}
+
+.ws-element-card.selected svg {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.ws-element-card span {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+}
+
+.light-mode .ws-element-card span {
+    color: var(--text-light);
+}
+
+.ws-element-card.selected span {
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+/* ========================================
+   WEBSITE PLATFORM GRID
+======================================== */
+.ws-platform-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.ws-platform-card {
+    padding: 18px 14px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background-color: transparent;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.light-mode .ws-platform-card {
+    border-color: var(--border-light);
+}
+
+.ws-platform-card:hover {
+    border-color: var(--primary);
+}
+
+.ws-platform-card.selected {
+    border: none;
+    background-image: linear-gradient(135deg, var(--gradient-1), var(--gradient-2));
+    box-shadow: 0 4px 15px var(--primary-glow);
+}
+
+.ws-platform-card span {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.light-mode .ws-platform-card span {
+    color: var(--text-light);
+}
+
+.ws-platform-card.selected span {
+    color: #ffffff !important;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+@media (max-width: 640px) {
+    .social-options-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .nav-style-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .ws-section-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .ws-element-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .ws-platform-grid {
+        grid-template-columns: 1fr;
+    }
+}
