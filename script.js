@@ -1,7 +1,7 @@
 document.getElementById('lpForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Mencegah halaman reload
+    e.preventDefault(); 
 
-    // 1. Tangkap semua data dari form
+    // 1. Tangkap Data
     const productName = document.getElementById('productName').value;
     const productDesc = document.getElementById('productDesc').value;
     const targetAudience = document.getElementById('targetAudience').value;
@@ -9,50 +9,36 @@ document.getElementById('lpForm').addEventListener('submit', function(e) {
     const usp = document.getElementById('usp').value;
     const cta = document.getElementById('cta').value;
 
-    // 2. Template Prompt (Otak dari Engine ini)
-    // Ini adalah "formula rahasia" biar hasil AI bagus
+    // 2. Rangkai Prompt
     const finalPrompt = `
-Bertindaklah sebagai seorang Expert Copywriter dan UI/UX Specialist.
+Bertindaklah sebagai seorang Expert Copywriter.
 
-Saya ingin kamu membuatkan script Landing Page yang menarik dan converting tinggi untuk produk berikut:
-
-Detail Produk:
+Buatkan struktur Landing Page untuk produk berikut:
 - Nama Produk: ${productName}
 - Deskripsi: ${productDesc}
 - Target Audiens: ${targetAudience}
 - Tone Bahasa: ${tone}
-- Unique Selling Point (USP): ${usp}
-- Call to Action (CTA): ${cta}
+- USP: ${usp}
+- CTA: ${cta}
 
-Tolong buatkan output dalam format berikut:
-1. **Headline Utama**: Harus punchy dan attention-grabbing.
-2. **Sub-headline**: Penjelasan singkat value proposition.
-3. **Manfaat Utama (Bullet Points)**: Jelaskan 3 manfaat paling kuat.
-4. **Social Proof**: Buatkan contoh testimoni fiktif yang realistis.
-5. **Penawaran & Urgency**: Buatkan kalimat urgency.
-6. **Tombol CTA**: Tulis teks untuk tombol.
+Format Output:
+1. Headline Utama
+2. Sub-headline
+3. Benefit (Bullet Points)
+4. Social Proof
+5. CTA
 
-Pastikan bahasa yang digunakan benar-benar ${tone} dan menyentuh "pain point" dari ${targetAudience}.
-    `.trim(); // .trim() buat hilangkan spasi berlebih di awal/akhir
+Gunakan bahasa Indonesia yang ${tone}.
+    `.trim();
 
-    // 3. Salin prompt ke clipboard pengguna
-    navigator.clipboard.writeText(finalPrompt).then(() => {
-        
-        // 4. Notifikasi & Redirect
-        alert('✅ Prompt berhasil disalin!\n\nPaste (Ctrl+V) prompt tersebut di AI nanti.');
+    // 3. Setup URL Target
+    // Kita coba kirim prompt lewat parameter URL ( ?q=... )
+    const encodedPrompt = encodeURIComponent(finalPrompt);
+    
+    // Ganti link ini sesuai format yang support (kalau ada)
+    // Banyak AI pakai format ?q= atau ?prompt=
+    const targetUrl = `https://chat.z.ai/?q=${encodedPrompt}`;
 
-        // Pilihan Link AI (Ganti link ini sesuai kebutuhan)
-        // ChatGPT: https://chat.openai.com/
-        // Claude: https://claude.ai/new
-        // Gemini: https://gemini.google.com/app
-        const aiLink = "https://chat.openai.com/"; 
-
-        // Buka tab baru ke AI
-        window.open(aiLink, '_blank');
-
-    }).catch(err => {
-        alert('Gagal menyalin otomatis. Silakan salin manual prompt di console.');
-        console.error('Error:', err);
-        console.log(finalPrompt); // Fallback kalau auto copy gagal
-    });
+    // 4. Eksekusi Buka Tab Baru
+    window.open(targetUrl, '_blank');
 });
