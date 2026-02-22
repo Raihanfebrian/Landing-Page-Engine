@@ -1,1 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page Engine - AI Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Pakai font modern dari Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
 
+    <div class="container">
+        <header>
+            <h1>🚀 Landing Page Engine</h1>
+            <p>Isi data di bawah, AI akan bikin landing page copywriting buat kamu.</p>
+        </header>
+
+        <form id="lpForm">
+            <!-- Section 1: Info Dasar -->
+            <div class="form-group">
+                <label for="productName">Nama Produk / Jasa</label>
+                <input type="text" id="productName" placeholder="Contoh: Kopi Susu Gua" required>
+            </div>
+
+            <div class="form-group">
+                <label for="productDesc">Deskripsi Singkat (Apa masalah yang dipecahkan?)</label>
+                <textarea id="productDesc" rows="3" placeholder="Contoh: Ngasih energi buat anak kost yang lagi deadliner tapi enak dan murah." required></textarea>
+            </div>
+
+            <!-- Section 2: Target & Tone -->
+            <div class="row">
+                <div class="form-group half">
+                    <label for="targetAudience">Target Audience</label>
+                    <input type="text" id="targetAudience" placeholder="Contoh: Anak Kost, Freelancer, Mahasiswa" required>
+                </div>
+                <div class="form-group half">
+                    <label for="tone">Tone Bahasa</label>
+                    <select id="tone">
+                        <option value="Santai dan Gaul">Santai & Gaul</option>
+                        <option value="Formal dan Profesional">Formal & Profesional</option>
+                        <option value="Persuasif dan Menjual">Persuasif (Salesy)</option>
+                        <option value="Luxury dan Eksklusif">Luxury & Eksklusif</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Section 3: Detail -->
+            <div class="form-group">
+                <label for="usp">Keunggulan Utama (USP)</label>
+                <textarea id="usp" rows="2" placeholder="Contoh: Bisa pesan via WA, antar gratis se-kampus, harga mulai 10rb." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="cta">Tombol Aksi (CTA)</label>
+                <input type="text" id="cta" placeholder="Contoh: Pesan Sekarang" required>
+            </div>
+
+            <button type="submit" class="btn-generate">
+                ✨ Generate Prompt & Buka AI
+            </button>
+        </form>
+
+        <div class="footer-note">
+            Dibuat dengan logika sederhana.
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
