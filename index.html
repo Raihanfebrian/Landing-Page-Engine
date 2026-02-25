@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Multi Platform Generator</title>
+    <meta name="description" content="Platform generator landing page dan website profesional.">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Multi Platform Generator - Landing Page & Website Engine">
+    <meta property="og:description" content="Platform generator landing page dan website dengan 17 framework. Buat landing page profesional dalam hitungan detik.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://raihanstruggle-engine.netlify.app">
+    <meta property="og:image" content="https://imgur.com/dY9Imoj.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="raihanstruggle">
+
+    <!-- Twitter Card (opsional) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Multi Platform Generator">
+    <meta name="twitter:description" content="Platform generator landing page dan website profesional.">
+    <meta name="twitter:image" content="https://raihanstruggle-engine.netlify.app/og-image.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" sizes="32x32" href="favicon.ico">
+    <link rel="apple-touch-icon" href="favicon.ico"> 
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page dark-mode">
+    <!-- Floating Orbs -->
+    <div class="floating-orb orb-1"></div>
+    <div class="floating-orb orb-2"></div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Logo & Title -->
+            <div style="text-align: center; margin-bottom: 32px;">
+                <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 10px 40px rgba(59, 130, 246, 0.3);">
+                    <img src="logo.ico" alt="Logo" style="width: 110px; height: 110px; object-fit: contain;">
+                </div>
+                <h1 style="font-size: 28px; font-weight: 700; color: #8b5cf6; margin: 0;">Raihanstruggle</h1>
+            </div>
+            <p class="login-subtitle">Masuk untuk melanjutkan</p>
+            
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="loginEmail" class="form-input" placeholder="email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="loginPassword" class="form-input" placeholder="••••••••" required>
+                </div>
+                
+                <!-- LINK LUPA PASSWORD -->
+                <div style="text-align: right; margin-top: -8px; margin-bottom: 20px;">
+                    <a href="#" onclick="resetPassword()" style="color: #3b82f6; font-size: 13px; text-decoration: none;">Lupa password?</a>
+                </div>
+                
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                    </svg>
+                    <span>Masuk</span>
+                </button>
+                
+                <!-- ERROR MESSAGE -->
+                <div id="loginError" class="login-error hidden">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span id="errorMessage">Email atau password salah</span>
+                </div>
+                
+                <!-- SUCCESS MESSAGE FOR RESET -->
+                <div id="resetSuccess" class="hidden" style="margin-top: 16px; padding: 12px; background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 10px; color: #22c55e; font-size: 13px; text-align: center;">
+                    Email reset password telah dikirim! Cek inbox/spam lu.
+                </div>
+            </form>
+            
+            <!-- Footer -->
+            <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <p style="color: #6b7280; font-size: 13px; margin: 0;">© 2026 raihanstruggle. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+
+    <!-- Firebase Config -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAxKoSrOhlIBV9xgtWKoDdimHqpxr1lm-k",
+            authDomain: "raihanstruggle-engine.firebaseapp.com",
+            projectId: "raihanstruggle-engine",
+            storageBucket: "raihanstruggle-engine.firebasestorage.app",
+            messagingSenderId: "421026076166",
+            appId: "1:421026076166:web:46b8485d492507a11f9587"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <!-- Auth Functions -->
+    <script src="auth-functions.js"></script>
+
+    <!-- Page Script -->
+    <script>
+        loadTheme();
+        checkAuthLogin('home.html');
+        
+        // Handle URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const expired = urlParams.get('expired');
+        const inactive = urlParams.get('inactive');
+        const notregistered = urlParams.get('notregistered');
+        
+        if (expired === 'true') {
+            setTimeout(function() {
+                showToast('warning', 'Paket Kadaluarsa', 'Masa aktif sudah berakhir. Silakan perpanjang.', 8000);
+            }, 1500);
+            window.history.replaceState({}, document.title, 'index.html');
+        } else if (inactive === 'true') {
+            setTimeout(function() {
+                showToast('error', 'Akses Ditolak', 'Akun tidak aktif.', 8000);
+            }, 1500);
+            window.history.replaceState({}, document.title, 'index.html');
+        } else if (notregistered === 'true') {
+            setTimeout(function() {
+                showToast('error', 'Belum Terdaftar', 'Email belum terdaftar.', 8000);
+            }, 1500);
+            window.history.replaceState({}, document.title, 'index.html');
+        }
+        
+        setTimeout(function() {
+            document.getElementById('pageLoader')?.classList.add('hidden');
+        }, 1000);
+        
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+            const errorMsg = document.getElementById('errorMessage');
+            const btn = document.getElementById('loginBtn');
+            
+            errorDiv.classList.add('hidden');
+            btn.disabled = true;
+            btn.innerHTML = '<span>Menghubungkan...</span>';
+            
+            try {
+                await firebase.auth().signInWithEmailAndPassword(email, password);
+                sessionStorage.setItem('justLoggedIn', 'true');
+            } catch (error) {
+                errorDiv.classList.remove('hidden');
+                
+                let errorMessage = '';
+                let errorTitle = 'Login Gagal';
+                
+                if (error.code === 'auth/user-not-found') {
+                    errorTitle = 'Akun Tidak Ditemukan';
+                    errorMessage = 'Email tidak terdaftar.';
+                } else if (error.code === 'auth/wrong-password') {
+                    errorTitle = 'Password Salah';
+                    errorMessage = 'Password salah.';
+                } else if (error.code === 'auth/invalid-email') {
+                    errorTitle = 'Email Tidak Valid';
+                    errorMessage = 'Format email salah.';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorTitle = 'Terlalu Banyak Percobaan';
+                    errorMessage = 'Coba lagi nanti.';
+                } else if (error.code === 'auth/invalid-credential') {
+                    errorTitle = 'Kredensial Salah';
+                    errorMessage = 'Email atau password salah.';
+                } else {
+                    errorMessage = error.message;
+                }
+                
+                errorMsg.textContent = errorMessage;
+                showToast('error', errorTitle, errorMessage);
+                
+                btn.disabled = false;
+                btn.innerHTML = '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg><span>Masuk</span>';
+            }
+        });
+        
+        document.getElementById('confirmResetBtn')?.addEventListener('click', confirmResetPassword);
+    </script>
+    <!-- Modal Konfirmasi Lupa Password -->
+    <div id="resetPasswordModal" class="modal-overlay">
+        <div class="modal-box" style="max-width: 420px;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="width: 60px; height: 60px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                    <svg fill="none" stroke="white" viewBox="0 0 24 24" style="width: 30px; height: 30px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                </div>
+                <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 8px;">Reset Password</h3>
+            </div>
+            
+            <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                <p style="color: #9ca3af; font-size: 14px; margin-bottom: 12px;">
+                    Link reset password akan dikirim ke:
+                </p>
+                <p id="resetEmailDisplay" style="color: #ffffff; font-weight: 600; font-size: 15px; word-break: break-all;"></p>
+            </div>
+            
+            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 10px; padding: 14px; margin-bottom: 20px;">
+                <p style="color: #fca5a5; font-size: 13px; font-weight: 600; margin-bottom: 8px;">⚠️ PERHATIANAN:</p>
+                <ul style="color: #9ca3af; font-size: 13px; margin: 0; padding-left: 18px;">
+                    <li style="margin-bottom: 4px;">Password lama akan <strong style="color: #fca5a5;">LANGSUNG TIDAK BERLAKU</strong></li>
+                    <li style="margin-bottom: 4px;">Semua device akan <strong style="color: #fca5a5;">LOGOUT</strong></li>
+                    <li>Anda wajib ganti password via email</li>
+                </ul>
+            </div>
+            
+            <div style="display: flex; gap: 12px;">
+                <button type="button" onclick="closeResetPasswordModal()" style="flex: 1; padding: 14px; background: #374151; color: #9ca3af; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                    Batal
+                </button>
+                <button type="button" id="confirmResetBtn" style="flex: 1; padding: 14px; background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                    Ya, Kirim Email
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
