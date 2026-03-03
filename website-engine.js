@@ -788,10 +788,27 @@ function handleSiteTypeChange(value) {
     const portfolioFields = document.getElementById('portfolioFields');
     const businessContent = document.getElementById('businessContent');
     const portfolioContent = document.getElementById('portfolioContent');
+    const manualContainer = document.getElementById('ws_siteTypeManualContainer');
     
     // Deteksi apakah ini Portfolio atau bukan
     const isPortfolio = (value === 'portfolio' || value === 'Personal Portfolio');
     
+    // Deteksi apakah ini pilihan manual/lainnya
+    const isManual = value.toLowerCase().includes('manual') || 
+                     value.toLowerCase().includes('lainnya') ||
+                     value.toLowerCase().includes('other') ||
+                     value.toLowerCase().includes('custom');
+    
+    // Handle Manual Input Container
+    if (manualContainer) {
+        if (isManual) {
+            manualContainer.classList.remove('hidden');
+        } else {
+            manualContainer.classList.add('hidden');
+        }
+    }
+    
+    // Handle Portfolio vs Business Fields
     if (isPortfolio) {
         // Show Portfolio Fields
         if (businessFields) businessFields.classList.add('hidden');
@@ -806,3 +823,4 @@ function handleSiteTypeChange(value) {
         if (portfolioContent) portfolioContent.classList.add('hidden');
     }
 }
+
