@@ -557,41 +557,73 @@ if (ws_websiteForm) {
         
         ws_updateActionButtons(true);
 
-        const brandName = document.getElementById('ws_brandName')?.value || '';
-        const siteType = ws_getValueSafe('ws_siteType', 'ws_siteTypeManual');
-        const tagline = document.getElementById('ws_tagline')?.value || '';
-        const seoKeywords = document.getElementById('ws_seoKeywords')?.value || '';
-        const shortDesc = document.getElementById('ws_shortDesc')?.value || '';
-        
-        const clientProblem = document.getElementById('ws_clientProblem')?.value || '';
-        const solution = document.getElementById('ws_solution')?.value || '';
-        const heroStyle = document.getElementById('ws_heroStyle')?.value || '';
-        const pageStructure = document.getElementById('ws_pageStructure')?.value || '';
-        
-        const targetAudience = ws_getValueSafe('ws_targetAudience', 'ws_targetAudienceManual');
-        const toneVoice = ws_getValueSafe('ws_toneVoice', 'ws_toneVoiceManual') || 'Professional & Formal';
-        
-        const usp = document.getElementById('ws_usp')?.value || '';
-        const estYear = document.getElementById('ws_estYear')?.value || '';
-        const socialLinksStr = ws_getSocialLinks();
-        
-        const services = document.getElementById('ws_services')?.value || '';
-        const contactInfo = document.getElementById('ws_contactInfo')?.value || '';
-        const primaryCta = document.getElementById('ws_primaryCta')?.value || '';
-        
-        const colorBrand = ws_getValueSafe('ws_colorBrand', 'ws_colorBrandManual');
-        const themeBg = document.getElementById('ws_themeBg')?.value || '';
-        const designStyle = document.getElementById('ws_designStyle')?.value || '';
+        // CEK TIPE WEBSITE
+        const siteTypeSelect = document.getElementById('ws_siteType');
+        const siteTypeValue = siteTypeSelect ? siteTypeSelect.value : 'business';
 
-        const sectionOrder = ['Services', 'Contact', 'Footer', 'About', 'Features', 'Latest News / Blog', 'Testimonials'];
-        const sortedSections = ws_sortItems(ws_selectedSections, sectionOrder);
-        const sectionsStr = sortedSections.length > 0 ? sortedSections.join(', ') : 'Default';
+        // DETEKSI PORTFOLIO
+        const isPortfolio = (siteTypeValue === 'portfolio' || siteTypeValue === 'Personal Portfolio');
 
-        const elementOrder = ['Newsletter Form', 'Google Map Embed', 'Floating WhatsApp Button', 'Language Switcher (ID/EN)'];
-        const sortedElements = ws_sortItems(ws_selectedElements, elementOrder);
-        const elementsStr = sortedElements.length > 0 ? sortedElements.join(', ') : 'Standar';
+        if (isPortfolio) {
+            // ===== GENERATE PORTFOLIO PROMPT =====
+            ws_currentPrompt = generatePortfolioPrompt();
+        } else {
+            // ===== GENERATE BUSINESS PROMPT (EXISTING LOGIC) =====
+            ws_currentPrompt = generateBusinessPrompt();
+        }
 
-        ws_currentPrompt = `ANDA ADALAH: Senior Web Designer & UI/UX Expert yang menguasai HTML, Tailwind CSS, dan prinsip modern design.
+        setTimeout(() => {
+            ws_animateTyping(ws_currentPrompt, 'ws_promptPreview', 'ws_promptPreviewMobile');
+        }, 1500);
+
+        if (window.innerWidth < 1024) {
+            const mobilePreview = document.getElementById('ws_promptPreviewMobile');
+            if (mobilePreview) {
+                mobilePreview.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+    });
+}
+
+// ========================================
+// GENERATE BUSINESS PROMPT
+// ========================================
+function generateBusinessPrompt() {
+    const brandName = document.getElementById('ws_brandName')?.value || '';
+    const siteType = ws_getValueSafe('ws_siteType', 'ws_siteTypeManual');
+    const tagline = document.getElementById('ws_tagline')?.value || '';
+    const seoKeywords = document.getElementById('ws_seoKeywords')?.value || '';
+    const shortDesc = document.getElementById('ws_shortDesc')?.value || '';
+    
+    const clientProblem = document.getElementById('ws_clientProblem')?.value || '';
+    const solution = document.getElementById('ws_solution')?.value || '';
+    const heroStyle = document.getElementById('ws_heroStyle')?.value || '';
+    const pageStructure = document.getElementById('ws_pageStructure')?.value || '';
+    
+    const targetAudience = ws_getValueSafe('ws_targetAudience', 'ws_targetAudienceManual');
+    const toneVoice = ws_getValueSafe('ws_toneVoice', 'ws_toneVoiceManual') || 'Professional & Formal';
+    
+    const usp = document.getElementById('ws_usp')?.value || '';
+    const estYear = document.getElementById('ws_estYear')?.value || '';
+    const socialLinksStr = ws_getSocialLinks();
+    
+    const services = document.getElementById('ws_services')?.value || '';
+    const contactInfo = document.getElementById('ws_contactInfo')?.value || '';
+    const primaryCta = document.getElementById('ws_primaryCta')?.value || '';
+    
+    const colorBrand = ws_getValueSafe('ws_colorBrand', 'ws_colorBrandManual');
+    const themeBg = document.getElementById('ws_themeBg')?.value || '';
+    const designStyle = document.getElementById('ws_designStyle')?.value || '';
+
+    const sectionOrder = ['Services', 'Contact', 'Footer', 'About', 'Features', 'Latest News / Blog', 'Testimonials'];
+    const sortedSections = ws_sortItems(ws_selectedSections, sectionOrder);
+    const sectionsStr = sortedSections.length > 0 ? sortedSections.join(', ') : 'Default';
+
+    const elementOrder = ['Newsletter Form', 'Google Map Embed', 'Floating WhatsApp Button', 'Language Switcher (ID/EN)'];
+    const sortedElements = ws_sortItems(ws_selectedElements, elementOrder);
+    const elementsStr = sortedElements.length > 0 ? sortedElements.join(', ') : 'Standar';
+
+    return `ANDA ADALAH: Senior Web Designer & UI/UX Expert yang menguasai HTML, Tailwind CSS, dan prinsip modern design.
 
 TUGAS ANDA: Membuat Website profesional (Company Profile/Portfolio) dengan struktur HTML semantik, responsif, dan mencerminkan kredibilitas brand.
 
@@ -640,16 +672,137 @@ STRUKTUR SECTION: ${sectionsStr}
 ELEMEN FUNGSIONAL TAMBAHAN: ${elementsStr}
 
 OUTPUT: Generate kode HTML lengkap (single file) dengan Tailwind CSS. Pastikan desainnya profesional, clean, dan sesuai semua aturan di atas.`;
+}
 
-        setTimeout(() => {
-            ws_animateTyping(ws_currentPrompt, 'ws_promptPreview', 'ws_promptPreviewMobile');
-        }, 1500);
+// ========================================
+// GENERATE PORTFOLIO PROMPT
+// ========================================
+function generatePortfolioPrompt() {
+    const name = document.getElementById('ws_personalName')?.value || 'Nama Anda';
+    const role = document.getElementById('ws_role')?.value || 'Profesi';
+    const tagline = document.getElementById('ws_personalTagline')?.value || '';
+    const aboutMe = document.getElementById('ws_aboutMe')?.value || '';
+    const skills = document.getElementById('ws_skills')?.value || '';
+    const projects = document.getElementById('ws_projects')?.value || '';
+    const experience = document.getElementById('ws_experience')?.value || '';
+    
+    const seoKeywords = document.getElementById('ws_seoKeywords')?.value || '';
+    const heroStyle = document.getElementById('ws_heroStyle')?.value || '';
+    const pageStructure = document.getElementById('ws_pageStructure')?.value || '';
+    const targetAudience = ws_getValueSafe('ws_targetAudience', 'ws_targetAudienceManual');
+    const toneVoice = ws_getValueSafe('ws_toneVoice', 'ws_toneVoiceManual') || 'Professional & Friendly';
+    
+    const socialLinksStr = ws_getSocialLinks();
+    const contactInfo = document.getElementById('ws_contactInfo')?.value || '';
+    const primaryCta = document.getElementById('ws_primaryCta')?.value || 'Hire Me';
+    
+    const colorBrand = ws_getValueSafe('ws_colorBrand', 'ws_colorBrandManual');
+    const themeBg = document.getElementById('ws_themeBg')?.value || '';
+    const designStyle = document.getElementById('ws_designStyle')?.value || 'Modern & Clean';
+    
+    const sectionOrder = ['Services', 'Contact', 'Footer', 'About', 'Features', 'Latest News / Blog', 'Testimonials'];
+    const sortedSections = ws_sortItems(ws_selectedSections, sectionOrder);
+    const sectionsStr = sortedSections.length > 0 ? sortedSections.join(', ') : 'About, Skills, Projects, Experience, Contact';
+    
+    const elementOrder = ['Newsletter Form', 'Google Map Embed', 'Floating WhatsApp Button', 'Language Switcher (ID/EN)'];
+    const sortedElements = ws_sortItems(ws_selectedElements, elementOrder);
+    const elementsStr = sortedElements.length > 0 ? sortedElements.join(', ') : 'Floating WhatsApp Button';
 
-        if (window.innerWidth < 1024) {
-            const mobilePreview = document.getElementById('ws_promptPreviewMobile');
-            if (mobilePreview) {
-                mobilePreview.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }
-    });
+    return `ANDA ADALAH: Senior Web Designer & UI/UX Expert yang menguasai HTML, Tailwind CSS, dan prinsip modern design.
+
+TUGAS ANDA: Membuat Website PORTFOLIO PERSONAL profesional dengan struktur HTML semantik, responsif, dan menampilkan kredibilitas individu.
+
+ATURAN DESAIN & LAYOUT (WAJIB DIPATUHI):
+1. LAYOUT & GRID: ${ws_selectedPlatform === 'Scalev' ? `STRUKTUR: FULL-WIDTH MOBILE-FIRST (Mutlak).
+- Container: Gunakan class 'w-full'. JANGAN gunakan container dengan margin otomatis di kiri kanan.
+- Layout: Single Column Only (1 Kolom). Jangan gunakan grid berdampingan.
+- Behavior: Semua elemen vertikal.
+- Alasan: Scalev adalah mobile-builder, layout desktop akan rusak jika ada margin.` : `STRUKTUR: FULLY RESPONSIVE STACKING.
+- Desktop: Layout lebar dengan Container standar. Gunakan Grid System untuk layout hero, services, dll.
+- Mobile: Stack vertikal (tumpuk ke bawah) dengan class responsif Tailwind (cth: grid-cols-1 md:grid-cols-3).`} (Gaya Hero: ${heroStyle})
+2. GLOBAL STYLE: Wajib set 'body { overflow-x: hidden; }' untuk mencegah scroll horizontal pada tampilan mobile.
+3. TEMA VISUAL: ${themeBg === 'Force Light Mode' ? 'Wajib Light Mode (Background terang, teks gelap).' : themeBg === 'Force Dark Mode' ? 'Wajib Dark Mode (Background gelap, teks terang).' : 'Sesuai gaya desain yang dipilih.'}
+4. NAVIGASI: Navbar gaya "${ws_selectedNavStyle}". Simple dan clean.
+5. BUTTON STYLING: Teks tombol WAJIB KONSISTEN. Gunakan '!important' pada properti warna teks.
+6. STRUKTUR HALAMAN: ${pageStructure}.
+7. SEO: Gunakan tag semantik. Masukkan keyword "${seoKeywords || name}" di Meta Tags dan Heading utama.
+8. ANTI-LOREM IPSUM: Dilarang menggunakan teks Lorem Ipsum. Gunakan data yang diberikan.
+9. CSS VARIABLE: Definisikan warna utama di :root.
+10. GAMBAR: Gunakan placeholder 'https://placehold.co/600x400' atau 'https://placehold.co/1200x600'. Jangan biarkan src kosong.
+
+BRIEF PROYEK:
+- Nama Lengkap: ${name}
+- Role/Profesi: ${role}
+- Tagline: ${tagline}
+- About Me: ${aboutMe}
+- Target Pengunjung: ${targetAudience}
+- Tone of Voice: ${toneVoice}
+
+SKILLS & KEAHLIAN:
+ ${skills}
+
+PROJECTS / PORTOFOLIO:
+ ${projects}
+
+EXPERIENCE / PENGALAMAN:
+ ${experience}
+
+DESAIN:
+- Gaya Desain: ${designStyle}
+- Warna Brand: ${colorBrand}
+- Platform Target: ${ws_selectedPlatform}
+
+STRUKTUR SECTION (Portfolio):
+1. Hero Section: Nama besar + role + tagline + foto placeholder
+2. About Section: Bio lengkap
+3. Skills Section: Visualisasi keahlian (progress bar, icons, atau tags)
+4. Projects Section: Grid karya/project dengan gambar placeholder
+5. Experience Section: Timeline karir
+6. Contact Section: Form kontak + social media links
+7. Footer: Social media + copyright
+
+Sections tambahan: ${sectionsStr}
+Elemen Fungsional: ${elementsStr}
+
+KONTAK & SOSIAL MEDIA:
+- Info Kontak: ${contactInfo}
+- Social Media: ${socialLinksStr}
+- Primary CTA: "${primaryCta}" atau "Let's Talk"
+
+CATATAN KHUSUS PORTFOLIO:
+- Desain modern dan clean
+- Fokus pada visual karya (Projects section harus menarik)
+- Professional tapi tetap personal
+- Animasi smooth saat scroll
+- Pastikan foto placeholder proporsional
+- Mobile responsive
+
+OUTPUT: Generate kode HTML lengkap (single file) dengan Tailwind CSS. Pastikan desainnya profesional, clean, dan sesuai semua aturan di atas.`;
+}
+
+// ========================================
+// TOGGLE PORTFOLIO FORM
+// ========================================
+function handleSiteTypeChange(value) {
+    const businessFields = document.getElementById('businessFields');
+    const portfolioFields = document.getElementById('portfolioFields');
+    const businessContent = document.getElementById('businessContent');
+    const portfolioContent = document.getElementById('portfolioContent');
+    
+    // Deteksi apakah ini Portfolio atau bukan
+    const isPortfolio = (value === 'portfolio' || value === 'Personal Portfolio');
+    
+    if (isPortfolio) {
+        // Show Portfolio Fields
+        if (businessFields) businessFields.classList.add('hidden');
+        if (portfolioFields) portfolioFields.classList.remove('hidden');
+        if (businessContent) businessContent.classList.add('hidden');
+        if (portfolioContent) portfolioContent.classList.remove('hidden');
+    } else {
+        // Show Business Fields
+        if (businessFields) businessFields.classList.remove('hidden');
+        if (portfolioFields) portfolioFields.classList.add('hidden');
+        if (businessContent) businessContent.classList.remove('hidden');
+        if (portfolioContent) portfolioContent.classList.add('hidden');
+    }
 }
