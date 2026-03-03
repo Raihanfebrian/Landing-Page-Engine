@@ -815,12 +815,34 @@ function handleSiteTypeChange(value) {
         if (portfolioFields) portfolioFields.classList.remove('hidden');
         if (businessContent) businessContent.classList.add('hidden');
         if (portfolioContent) portfolioContent.classList.remove('hidden');
+        
+        // REMOVE required dari Business fields
+        const brandName = document.getElementById('ws_brandName');
+        if (brandName) brandName.removeAttribute('required');
+        
+        // ADD required ke Portfolio fields
+        const personalName = document.getElementById('ws_personalName');
+        const role = document.getElementById('ws_role');
+        if (personalName) personalName.setAttribute('required', '');
+        if (role) role.setAttribute('required', '');
+        
     } else {
         // Show Business Fields
         if (businessFields) businessFields.classList.remove('hidden');
         if (portfolioFields) portfolioFields.classList.add('hidden');
         if (businessContent) businessContent.classList.remove('hidden');
         if (portfolioContent) portfolioContent.classList.add('hidden');
+        
+        // ADD required ke Business fields
+        const brandName = document.getElementById('ws_brandName');
+        if (brandName) brandName.setAttribute('required', '');
+        
+        // REMOVE required dari Portfolio fields
+        const personalName = document.getElementById('ws_personalName');
+        const role = document.getElementById('ws_role');
+        if (personalName) personalName.removeAttribute('required');
+        if (role) role.removeAttribute('required');
     }
 }
+
 
