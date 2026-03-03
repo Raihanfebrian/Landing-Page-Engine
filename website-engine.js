@@ -389,13 +389,29 @@ function ws_copyPrompt() {
 }
 
 // ========================================
-// SEND TO AI
+// SEND TO AI (SMART METHOD)
 // ========================================
 function ws_sendToAI() {
     if (!ws_currentPrompt) return;
     
-    const encodedPrompt = encodeURIComponent(ws_currentPrompt);
-    window.open(`https://chat.z.ai/?q=${encodedPrompt}`, '_blank');
+    // Batas aman untuk URL (2000 karakter)
+    const MAX_URL_LENGTH = 2000;
+    
+    if (ws_currentPrompt.length <= MAX_URL_LENGTH) {
+        // ===== PROMPT PENDEK: AUTO SEND =====
+        const encodedPrompt = encodeURIComponent(ws_currentPrompt);
+        window.open(`https://chat.z.ai/?q=${encodedPrompt}`, '_blank');
+    } else {
+        // ===== PROMPT PANJANG: COPY + OPEN =====
+        navigator.clipboard.writeText(ws_currentPrompt).then(() => {
+            window.open('https://chat.z.ai/', '_blank');
+            ws_showToast('✅ Prompt disalin! Paste (Ctrl+V) di Z Ai.');
+        }).catch(err => {
+            console.error('Gagal copy:', err);
+            window.open('https://chat.z.ai/', '_blank');
+            ws_showToast('⚠️ Gagal menyalin. Salin manual dari preview.');
+        });
+    }
 }
 
 // ========================================
@@ -844,5 +860,6 @@ function handleSiteTypeChange(value) {
         if (role) role.removeAttribute('required');
     }
 }
+
 
 
