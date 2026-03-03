@@ -111,24 +111,13 @@
                             </h3>
                             <div class="form-grid-2">
                                 <div>
-                                    <label class="form-label required">Nama Brand</label>
-                                    <input type="text" id="ws_brandName" class="form-input" placeholder="Nama brand atau perusahaan" required>
-                                </div>
-                                <div>
-                                    <label class="form-label">Tagline</label>
-                                    <input type="text" id="ws_tagline" class="form-input" placeholder="Tagline brand anda">
-                                </div>
-                            </div>
-                            <div class="form-grid-2">
-                                <div>
                                     <label class="form-label required">Tipe Website</label>
-                                    <select id="ws_siteType" class="form-input" onchange="handleManualInput(this, 'ws_siteTypeManual')">
-                                        <option value="Company Profile (Jasa/Konsultan)">Company Profile (Jasa)</option>
-                                        <option value="Company Profile (Produk/Fisik)">Company Profile (Produk)</option>
-                                        <option value="Personal Portfolio">Personal Portfolio</option>
-                                        <option value="Restaurant / Cafe">Restaurant / Cafe</option>
-                                        <option value="Event / Komunitas">Event / Komunitas</option>
-                                        <option value="Lainnya (Isi Manual)">Lainnya (Isi Manual)</option>
+                                    <select id="ws_siteType" class="form-input" onchange="handleSiteTypeChange(this.value); handleManualInput(this, 'ws_siteTypeManual');">
+                                        <option value="business">Business / Company Profile</option>
+                                        <option value="portfolio">Personal Portfolio</option>
+                                        <option value="restaurant">Restaurant / Cafe</option>
+                                        <option value="event">Event / Komunitas</option>
+                                        <option value="other">Lainnya (Isi Manual)</option>
                                     </select>
                                     <div id="ws_siteTypeManualContainer" class="manual-input-container hidden">
                                         <input type="text" id="ws_siteTypeManual" class="form-input mt-2" placeholder="Masukkan tipe website...">
@@ -139,9 +128,101 @@
                                     <input type="text" id="ws_seoKeywords" class="form-input" placeholder="Kata kunci (pisahkan dengan koma)">
                                 </div>
                             </div>
-                            <div>
-                                <label class="form-label">Deskripsi Singkat</label>
-                                <textarea id="ws_shortDesc" rows="3" class="form-input" placeholder="Jelaskan brand / bisnis Anda secara detail"></textarea>
+                            
+                            <!-- ========== BUSINESS FIELDS ========== -->
+                            <div id="businessFields">
+                                <div class="form-grid-2">
+                                    <div>
+                                        <label class="form-label required">Nama Brand</label>
+                                        <input type="text" id="ws_brandName" class="form-input" placeholder="Nama brand atau perusahaan" required>
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Tagline</label>
+                                        <input type="text" id="ws_tagline" class="form-input" placeholder="Tagline brand anda">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="form-label">Deskripsi Singkat</label>
+                                    <textarea id="ws_shortDesc" rows="3" class="form-input" placeholder="Jelaskan brand / bisnis Anda secara detail"></textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- ========== PORTFOLIO FIELDS ========== -->
+                            <div id="portfolioFields" class="hidden">
+                                <div class="form-grid-2">
+                                    <div>
+                                        <label class="form-label required">Nama Lengkap</label>
+                                        <input type="text" id="ws_personalName" class="form-input" placeholder="Nama lengkap kamu">
+                                    </div>
+                                    <div>
+                                        <label class="form-label required">Role / Profesi</label>
+                                        <input type="text" id="ws_role" class="form-input" placeholder="Contoh: UI/UX Designer, Web Developer">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="form-label">Tagline Personal</label>
+                                    <input type="text" id="ws_personalTagline" class="form-input" placeholder="Contoh: Crafting Digital Experiences">
+                                </div>
+                                <div>
+                                    <label class="form-label">About Me (Bio)</label>
+                                    <textarea id="ws_aboutMe" rows="3" class="form-input" placeholder="Ceritakan tentang diri kamu, perjalanan karir, passion..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Konten & Struktur Detail -->
+                        <div class="section-card">
+                            <h3 class="section-title">
+                                <span class="section-number">2</span>
+                                Konten & Struktur Detail
+                                <span class="section-badge">Deskripsi, masalah, dan solusi brand</span>
+                            </h3>
+                            
+                            <!-- ========== BUSINESS CONTENT ========== -->
+                            <div id="businessContent">
+                                <div>
+                                    <label class="form-label">Masalah Klien</label>
+                                    <textarea id="ws_clientProblem" rows="2" class="form-input" placeholder="Masalah apa yang brand Anda selesaikan dari klien?"></textarea>
+                                </div>
+                                <div>
+                                    <label class="form-label">Solusi Anda</label>
+                                    <textarea id="ws_solution" rows="2" class="form-input" placeholder="Solusi apa yang Anda tawarkan?"></textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- ========== PORTFOLIO CONTENT ========== -->
+                            <div id="portfolioContent" class="hidden">
+                                <div>
+                                    <label class="form-label">Skills / Keahlian</label>
+                                    <textarea id="ws_skills" rows="2" class="form-input" placeholder="Contoh: UI Design, Figma, HTML/CSS, JavaScript, React..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="form-label">Projects / Portofolio Kerja</label>
+                                    <textarea id="ws_projects" rows="3" class="form-input" placeholder="Daftar project yang sudah dikerjakan beserta deskripsi singkat..."></textarea>
+                                </div>
+                                <div>
+                                    <label class="form-label">Pengalaman / Experience</label>
+                                    <textarea id="ws_experience" rows="2" class="form-input" placeholder="Contoh: Senior Designer at Tokopedia (2020-2023)..."></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid-2">
+                                <div>
+                                    <label class="form-label required">Gaya Hero Section</label>
+                                    <select id="ws_heroStyle" class="form-input">
+                                        <option value="Split Screen (Kiri Teks, Kanan Gambar)">Split Screen (Teks Kiri, Gambar Kanan)</option>
+                                        <option value="Centered Typography (Teks Tengah Dominan)">Centered Typography</option>
+                                        <option value="Full Background Image (Teks diatas Gambar)">Full Background Image</option>
+                                        <option value="Asymmetric / Creative Layout">Asymmetric / Creative</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label required">Struktur Halaman</label>
+                                    <select id="ws_pageStructure" class="form-input">
+                                        <option value="Single Page (Scroll ke bawah)">Single Page (One Page)</option>
+                                        <option value="Multi Page (Home, About, Contact terpisah)">Multi Page Structure</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
