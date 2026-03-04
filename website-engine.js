@@ -279,7 +279,7 @@ function ws_executeReset() {
     const form = document.getElementById('websiteForm');
     if (form) form.reset();
 
-    // TAMBAHKAN INI: Hapus data dari localStorage
+    // Hapus data dari localStorage
     localStorage.removeItem('websiteFormData');
 
     document.querySelectorAll('.manual-input-container').forEach(container => {
@@ -289,6 +289,13 @@ function ws_executeReset() {
     document.querySelectorAll('[id^="ws_"][id$="Manual"]').forEach(input => {
         input.value = '';
     });
+    
+    // --- TAMBAHAN: Reset wrapper baru ---
+    const businessEstYearWrapper = document.getElementById('businessEstYearWrapper');
+    const portfolioBirthWrapper = document.getElementById('portfolioBirthWrapper');
+    if (businessEstYearWrapper) businessEstYearWrapper.classList.remove('hidden');
+    if (portfolioBirthWrapper) portfolioBirthWrapper.classList.add('hidden');
+    // -----------------------------------
 
     document.querySelectorAll('.ws-section-card:not(.locked)').forEach(card => {
         card.classList.remove('selected');
@@ -764,6 +771,10 @@ function generatePortfolioPrompt() {
     const targetAudience = ws_getValueSafe('ws_targetAudience', 'ws_targetAudienceManual');
     const toneVoice = ws_getValueSafe('ws_toneVoice', 'ws_toneVoiceManual') || 'Professional & Friendly';
     
+    // Update: Ambil value birthPlaceDate, fallback ke kosong
+    const birthPlaceDate = document.getElementById('ws_birthPlaceDate')?.value || '';
+    const usp = document.getElementById('ws_usp')?.value || '';
+    
     const socialLinksStr = ws_getSocialLinks();
     const contactInfo = document.getElementById('ws_contactInfo')?.value || '';
     const primaryCta = document.getElementById('ws_primaryCta')?.value || 'Hire Me';
@@ -809,6 +820,10 @@ BRIEF PROYEK:
 - About Me: ${aboutMe}
 - Target Pengunjung: ${targetAudience}
 - Tone of Voice: ${toneVoice}
+
+PERSONAL INFO:
+- Tempat, Tanggal Lahir: ${birthPlaceDate || 'Tidak ditentukan'}
+- USP: ${usp || 'Tidak ditentukan'}
 
 SKILLS & KEAHLIAN:
  ${skills}
@@ -862,6 +877,10 @@ function handleSiteTypeChange(value) {
     const portfolioContent = document.getElementById('portfolioContent');
     const manualContainer = document.getElementById('ws_siteTypeManualContainer');
     
+    // New Wrappers for Section 4
+    const businessEstYearWrapper = document.getElementById('businessEstYearWrapper');
+    const portfolioBirthWrapper = document.getElementById('portfolioBirthWrapper');
+    
     // Deteksi apakah ini Portfolio atau bukan
     const isPortfolio = (value === 'portfolio' || value === 'Personal Portfolio');
     
@@ -888,6 +907,10 @@ function handleSiteTypeChange(value) {
         if (businessContent) businessContent.classList.add('hidden');
         if (portfolioContent) portfolioContent.classList.remove('hidden');
         
+        // Section 4 Toggle
+        if (businessEstYearWrapper) businessEstYearWrapper.classList.add('hidden');
+        if (portfolioBirthWrapper) portfolioBirthWrapper.classList.remove('hidden');
+        
         // REMOVE required dari Business fields
         const brandName = document.getElementById('ws_brandName');
         if (brandName) brandName.removeAttribute('required');
@@ -904,6 +927,10 @@ function handleSiteTypeChange(value) {
         if (portfolioFields) portfolioFields.classList.add('hidden');
         if (businessContent) businessContent.classList.remove('hidden');
         if (portfolioContent) portfolioContent.classList.add('hidden');
+        
+        // Section 4 Toggle
+        if (businessEstYearWrapper) businessEstYearWrapper.classList.remove('hidden');
+        if (portfolioBirthWrapper) portfolioBirthWrapper.classList.add('hidden');
         
         // ADD required ke Business fields
         const brandName = document.getElementById('ws_brandName');
