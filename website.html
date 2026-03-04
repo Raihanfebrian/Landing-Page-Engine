@@ -625,13 +625,19 @@
                             <p class="preview-placeholder">Prompt akan muncul di sini setelah Anda mengklik "Generate Prompt"...</p>
                         </div>
                         <div class="preview-footer">
-                            <button id="ws_finalActionBtn" onclick="ws_sendToAI()" disabled class="btn-action">
-                                <svg class="btn-icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                                </svg>
-                                <span>Buat Website Sekarang</span>
-                            </button>
+                        <!-- INDIKATOR STATUS -->
+                        <div id="ws_promptStatus" class="prompt-status hidden">
+                            <span class="status-icon"></span>
+                            <span class="status-text"></span>
                         </div>
+                        
+                        <button id="ws_finalActionBtn" onclick="ws_sendToAI()" disabled class="btn-action">
+                            <svg class="btn-icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                            </svg>
+                            <span>Buat Website Sekarang</span>
+                        </button>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -652,7 +658,13 @@
                         <p class="preview-placeholder">Prompt akan muncul di sini...</p>
                     </div>
                     <div class="preview-footer">
-                        <button id="ws_finalActionBtnMobile" onclick="ws_sendToAI()" disabled class="btn-action">
+                        <!-- INDIKATOR STATUS -->
+                        <div id="ws_promptStatus" class="prompt-status hidden">
+                            <span class="status-icon"></span>
+                            <span class="status-text"></span>
+                        </div>
+                        
+                        <button id="ws_finalActionBtn" onclick="ws_sendToAI()" disabled class="btn-action">
                             <svg class="btn-icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                             </svg>
@@ -851,4 +863,5 @@
     </script>
 </body>
 </html>
+
 
