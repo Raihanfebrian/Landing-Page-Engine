@@ -12,6 +12,52 @@ let ws_selectedPlatform = "Scalev";
 let ws_selectedNavStyle = "Sticky";
 let ws_activeSocials = {};
 let ws_typingInterval = null;
+let ws_isAutoGenerate = true;
+
+function ws_updatePromptStatus() {
+    const statusEl = document.getElementById('ws_promptStatus');
+    const btnText = document.querySelector('#ws_finalActionBtn span');
+    const btnTextMobile = document.querySelector('#ws_finalActionBtnMobile span');
+    
+    if (!statusEl) return;
+    
+    const MAX_URL_LENGTH = 5500; // Diupdate jadi 5500
+    const promptLength = ws_currentPrompt.length;
+    
+    statusEl.classList.remove('hidden', 'auto', 'manual');
+    
+    if (promptLength <= MAX_URL_LENGTH) {
+        // ===== PROMPT PENDEK - AUTO GENERATE =====
+        ws_isAutoGenerate = true;
+        statusEl.classList.add('auto');
+        statusEl.innerHTML = `
+            <span class="status-icon">✅</span>
+            <span class="status-text">Siap generate otomatis (${promptLength} karakter)</span>
+        `;
+        
+        if (btnText) btnText.textContent = 'Buat Website Sekarang';
+        if (btnTextMobile) btnTextMobile.textContent = 'Buat Website Sekarang';
+        
+    } else {
+        // ===== PROMPT PANJANG - MANUAL PASTE =====
+        ws_isAutoGenerate = false;
+        statusEl.classList.add('manual');
+        statusEl.innerHTML = `
+            <span class="status-icon">⚠️</span>
+            <span class="status-text">Prompt terlalu panjang (${promptLength} karakter) - perlu paste manual</span>
+        `;
+        
+        if (btnText) btnText.textContent = 'Copy & Buat Website Sekarang';
+        if (btnTextMobile) btnTextMobile.textContent = 'Copy & Buka Website Sekarang';
+        
+        // Auto-salin prompt ke clipboard
+        navigator.clipboard.writeText(ws_currentPrompt).then(() => {
+            ws_showToast('📋 Prompt disalin! Tinggal paste di Z Ai.');
+        }).catch(err => {
+            console.error('Gagal copy:', err);
+        });
+    }
+}
 
 // ========================================
 // MANUAL INPUT HANDLER (GLOBAL)
@@ -233,6 +279,9 @@ function ws_executeReset() {
     const form = document.getElementById('websiteForm');
     if (form) form.reset();
 
+    // TAMBAHKAN INI: Hapus data dari localStorage
+    localStorage.removeItem('websiteFormData');
+
     document.querySelectorAll('.manual-input-container').forEach(container => {
         container.classList.add('hidden');
     });
@@ -253,11 +302,11 @@ function ws_executeReset() {
     });
     ws_updateSectionsInput();
 
-    document.querySelectorAll('.ws-element-card').forEach(card => {
+    document.querySelectorAll('.ws-element-compact').forEach(card => {
         card.classList.remove('selected');
     });
     ws_selectedElements = ["Floating WhatsApp Button"];
-    document.querySelectorAll('.ws-element-card').forEach(card => {
+    document.querySelectorAll('.ws-element-compact').forEach(card => {
         if (ws_selectedElements.includes(card.querySelector('span').textContent)) {
             card.classList.add('selected');
         }
@@ -297,6 +346,10 @@ function ws_executeReset() {
 
     ws_currentPrompt = "";
     ws_updatePreview();
+    
+    // Reset status indicator
+    const statusEl = document.getElementById('ws_promptStatus');
+    if (statusEl) statusEl.classList.add('hidden');
     
     ws_updateActionButtons(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -389,27 +442,26 @@ function ws_copyPrompt() {
 }
 
 // ========================================
-// SEND TO AI (SMART METHOD)
+// SEND TO AI
 // ========================================
 function ws_sendToAI() {
     if (!ws_currentPrompt) return;
     
-    // Batas aman untuk URL (2000 karakter)
-    const MAX_URL_LENGTH = 2000;
+    const MAX_URL_LENGTH = 5500; // Diupdate jadi 5500
     
     if (ws_currentPrompt.length <= MAX_URL_LENGTH) {
-        // ===== PROMPT PENDEK: AUTO SEND =====
+        // PROMPT PENDEK: Langsung generate
         const encodedPrompt = encodeURIComponent(ws_currentPrompt);
         window.open(`https://chat.z.ai/?q=${encodedPrompt}`, '_blank');
     } else {
-        // ===== PROMPT PANJANG: COPY + OPEN =====
+        // PROMPT PANJANG: Copy + Open
         navigator.clipboard.writeText(ws_currentPrompt).then(() => {
             window.open('https://chat.z.ai/', '_blank');
-            ws_showToast('✅ Prompt disalin! Paste (Ctrl+V) di Z Ai.');
+            ws_showToast('📋 Prompt disalin! Paste (Ctrl+V) lalu klik Send.');
         }).catch(err => {
             console.error('Gagal copy:', err);
             window.open('https://chat.z.ai/', '_blank');
-            ws_showToast('⚠️ Gagal menyalin. Salin manual dari preview.');
+            ws_showToast('⚠️ Salin manual dari preview, lalu paste di Z Ai.');
         });
     }
 }
@@ -590,6 +642,10 @@ if (ws_websiteForm) {
 
         setTimeout(() => {
             ws_animateTyping(ws_currentPrompt, 'ws_promptPreview', 'ws_promptPreviewMobile');
+            // TAMBAHKAN INI: Update status indicator setelah selesai
+            setTimeout(() => {
+                ws_updatePromptStatus();
+            }, ws_currentPrompt.length * 1); // tunggu typing selesai
         }, 1500);
 
         if (window.innerWidth < 1024) {
@@ -860,6 +916,3 @@ function handleSiteTypeChange(value) {
         if (role) role.removeAttribute('required');
     }
 }
-
-
-
