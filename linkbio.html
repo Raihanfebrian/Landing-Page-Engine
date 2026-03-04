@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Bio Engine - By Raihanstruggle</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="website.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" sizes="32x32" href="favicon.ico">
+    <link rel="apple-touch-icon" href="favicon.ico">
+</head>
+<body class="dark-mode">
+    <!-- Page Transition Loader -->
+    <div id="pageLoader" class="page-loader">
+        <div class="loader-content">
+            <div class="loader-logo" style="width: 80px; height: 80px; background: linear-gradient(135deg, #f97316, #ea580c); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 40px rgba(249, 115, 22, 0.3); margin: 0 auto 20px;">
+                <img src="logo.ico" alt="Logo" style="width: 110px; height: 110px; object-fit: contain;">
+            </div>
+            <h1 class="loader-title">Raihanstruggle</h1>
+            <p class="loader-tagline">Bantu Bisnismu Sukses di Era Digital</p>
+            <div class="loader-spinner"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header-glass">
+        <div class="header-inner">
+            <div class="header-brand">
+                <div class="brand-icon" style="background: linear-gradient(135deg, #f97316, #ea580c); border-radius: 10px; padding: 6px;">
+                    <img src="logo.ico" alt="Logo" style="width: 56px; height: 56px; object-fit: contain;">
+                </div>
+                <div>
+                    <h1 class="brand-title">Link Bio Engine</h1>
+                    <p class="brand-subtitle">By Raihanstruggle</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <a href="home.html" class="btn-header btn-back">
+                    <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    <span>Back</span>
+                </a>
+                <button onclick="openProfileModal()" class="btn-header">
+                    <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <span>Profil</span>
+                </button>
+                <button onclick="toggleTheme()" id="themeToggle" class="btn-header btn-icon-only">
+                    <svg id="darkIcon" class="theme-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                    <svg id="lightIcon" class="theme-icon hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                    </svg>
+                </button>
+                <button onclick="logout()" class="btn-header btn-exit">
+                    <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                    <span>Keluar</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="main-inner">
+            <!-- Hero Text -->
+            <div class="hero-section">
+                <div class="hero-badge">
+                    <span class="hero-dot"></span>
+                    <span>Link Bio Builder</span>
+                </div>
+                <h2 class="hero-title">
+                    Bio Page yang Bikin<br><span class="gradient-text">Pengunjung Klik Terus</span>
+                </h2>
+                <p class="hero-subtitle">
+                    Ayo kita bikin jadi lebih maksimal
+                </p>
+            </div>
+
+            <!-- Layout -->
+            <div class="content-layout">
+                <!-- Form Section -->
+                <div class="form-section">
+                    <form id="linkbioForm">
+                        
+                        <!-- Section 1: Profil & Brand -->
+                        <div class="section-card">
+                            <h3 class="section-title">
+                                <span class="section-number">1</span>
+                                Profil & Brand
+                                <span class="section-badge">Informasi dasar profil</span>
+                            </h3>
+                            <div class="form-grid-2">
+                                <div>
+                                    <label class="form-label required">Nama *</label>
+                                    <input type="text" id="lb_name" class="form-input" placeholder="Nama Anda / Brand" required>
+                                </div>
+                                <div>
+                                    <label class="form-label required">Role / Title *</label>
+                                    <input type="text" id="lb_role" class="form-input" placeholder="Contoh: Content Creator" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label">Bio Singkat</label>
+                                <textarea id="lb_bio" rows="2" class="form-input" placeholder="Deskripsikan diri Anda dalam 1-2 kalimat..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Social Media Bar -->
+                        <div class="section-card">
+                            <h3 class="section-title">
+                                <span class="section-number">2</span>
+                                Social Media Bar
+                                <span class="section-badge">Link sosial media yang ditampilkan (Opsional: kosongkan jika tidak perlu)</span>
+                            </h3>
+                            <div class="form-grid-2">
+                                <!-- Kolom 1 -->
+                                <div class="social-item-vertical">
+                                    <label class="form-label">Instagram</label>
+                                    <input type="text" id="lb_ig" class="form-input" placeholder="@username">
+                                </div>
+                                <div class="social-item-vertical">
+                                    <label class="form-label">Facebook</label>
+                                    <input type="text" id="lb_fb" class="form-input" placeholder="@username">
+                                </div>
+                                <div class="social-item-vertical">
+                                    <label class="form-label">TikTok</label>
+                                    <input type="text" id="lb_tiktok" class="form-input" placeholder="@username">
+                                </div>
+                                <div class="social-item-vertical">
+                                    <label class="form-label">X / Twitter</label>
+                                    <input type="text" id="lb_x" class="form-input" placeholder="@username">
+                                </div>
+                                <!-- Kolom 2 -->
+                                <div class="social-item-vertical">
+                                    <label class="form-label">Threads</label>
+                                    <input type="text" id="lb_threads" class="form-input" placeholder="@username">
+                                </div>
+                                <div class="social-item-vertical">
+                                    <label class="form-label">YouTube</label>
+                                    <input type="text" id="lb_yt" class="form-input" placeholder="Channel Name">
+                                </div>
+                                <div class="social-item-vertical">
+                                    <label class="form-label">LinkedIn</label>
+                                    <input type="text" id="lb_linkedin" class="form-input" placeholder="Profile URL">
+                                </div>
+                                <div class="social-item-vertical">
+                                    <label class="form-label">WhatsApp</label>
+                                    <input type="text" id="lb_wa" class="form-input" placeholder="628xx">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Link & Layout -->
+                        <div class="section-card">
+                            <h3 class="section-title">
+                                <span class="section-number">3</span>
+                                Link & Layout
+                                <span class="section-badge">Atur layout dan daftar link</span>
+                            </h3>
+                            <div>
+                                <label class="form-label required">Link Layout</label>
+                                <select id="lb_layout" class="form-input">
+                                    <option value="Standard List">Standard List (Tumpuk ke bawah)</option>
+                                    <option value="Grid Cards">Grid Cards (Cocok untuk Produk/Katalog)</option>
+                                    <option value="Accordion">Accordion (Kategori Link)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label">Highlight Link</label>
+                                <input type="text" id="lb_highlight" class="form-input" placeholder="URL link utama yang di-highlight">
+                            </div>
+                            <div>
+                                <label class="form-label required">List Link *</label>
+                                <textarea id="lb_links" rows="5" class="form-input" placeholder="CONTOH PENGISIAN:&#10;Katalog Produk | https://website.com/katalog&#10;Admin WhatsApp | https://wa.me/62812xxx&#10;Join Telegram | https://t.me/channel" required></textarea>
+                                <p class="text-xs text-gray-500 mt-1">Format: Judul Link | URL (satu per baris)</p>
+                            </div>
+                        </div>
+
+                        <!-- Section 4: Profile Visuals -->
+                        <div class="section-card">
+                            <h3 class="section-title">
+                                <span class="section-number">4</span>
+                                Profile Visuals
+                                <span class="section-badge">Foto profil, background, dan tombol</span>
+                            </h3>
+                            
+                            <!-- Bentuk Foto Profil - Pencetan -->
+                            <div>
+                                <label class="form-label">Bentuk Foto Profil</label>
+                                <div class="lb-option-grid-3">
+                                    <button type="button" class="lb-option-card selected" onclick="lb_selectOption(this, 'lb_photoShape', 'Circle')">
+                                        <span>Circle</span>
+                                    </button>
+                                    <button type="button" class="lb-option-card" onclick="lb_selectOption(this, 'lb_photoShape', 'Rounded Square')">
+                                        <span>Rounded Square</span>
+                                    </button>
+                                    <button type="button" class="lb-option-card" onclick="lb_selectOption(this, 'lb_photoShape', 'No Photo')">
+                                        <span>No Photo</span>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="lb_photoShape" value="Circle">
+                            </div>
+                            
+                            <!-- Background Style - Dropdown -->
+                            <div>
+                                <label class="form-label">Background Style</label>
+                                <select id="lb_bgStyle" class="form-input">
+                                    <option value="Gradient">Gradient</option>
+                                    <option value="Solid Color">Solid Color</option>
+                                    <option value="Image">Image</option>
+                                    <option value="Video">Video</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Bentuk Tombol - Pencetan -->
+                            <div>
+                                <label class="form-label">Bentuk Tombol</label>
+                                <div class="lb-option-grid-4">
+                                    <button type="button" class="lb-option-card selected" onclick="lb_selectOption(this, 'lb_btnShape', 'Pill')">
+                                        <span>Pill</span>
+                                    </button>
+                                    <button type="button" class="lb-option-card" onclick="lb_selectOption(this, 'lb_btnShape', 'Rounded')">
+                                        <span>Rounded</span>
+                                    </button>
+                                    <button type="button" class="lb-option-card" onclick="lb_selectOption(this, 'lb_btnShape', 'Outline')">
+                                        <span>Outline</span>
+                                    </button>
+                                    <button type="button" class="lb-option-card" onclick="lb_selectOption(this, 'lb_btnShape', 'Square')">
+                                        <span>Square</span>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="lb_btnShape" value="Pill">
+                            </div>
+                        </div>
+
+                        <!-- Section 5: Identitas Visual & Desain -->
+                        <div class="section-card">
+                            <h3 class="section-title">
+                                <span class="section-number">5</span>
+                                Identitas Visual & Desain
+                                <span class="section-badge">Warna, tema, gaya desain, animasi, dan font</span>
+                            </h3>
+                            
+                            <div class="form-grid-2">
+                                <div>
+                                    <label class="form-label required">Warna Brand</label>
+                                    <select id="lb_colorBrand" class="form-input">
+                                        <optgroup label="A. Netral / Monokrom">
+                                            <option value="Neutral (White/Black/Gray)">Neutral / Monokrom</option>
+                                            <option value="Slate / Zinc (Cool Gray)">Slate / Zinc</option>
+                                        </optgroup>
+                                        <optgroup label="B. Oranye & Merah">
+                                            <option value="Brand Orange (Vibrant)" selected>Brand Orange</option>
+                                            <option value="Red (Bright/Alert)">Red</option>
+                                            <option value="Rose / Pink">Rose / Pink</option>
+                                            <option value="Amber / Gold">Amber / Gold</option>
+                                        </optgroup>
+                                        <optgroup label="C. Biru & Ungu">
+                                            <option value="Ocean Blue">Ocean Blue</option>
+                                            <option value="Sky Blue (Soft)">Sky Blue</option>
+                                            <option value="Indigo">Indigo</option>
+                                            <option value="Violet / Purple">Violet / Purple</option>
+                                            <option value="Royal Purple">Royal Purple</option>
+                                        </optgroup>
+                                        <optgroup label="D. Hijau & Cyan">
+                                            <option value="Emerald Green">Emerald Green</option>
+                                            <option value="Teal / Cyan">Teal / Cyan</option>
+                                            <option value="Lime (Bright Green)">Lime Green</option>
+                                            <option value="Forest Green">Forest Green</option>
+                                        </optgroup>
+                                        <optgroup label="E. Kuning & Coklat">
+                                            <option value="Yellow">Yellow</option>
+                                            <option value="Brown / Earthy">Brown / Earthy</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label">Tema Background</label>
+                                    <select id="lb_themeBg" class="form-input">
+                                        <option value="Default">Default (Ikuti Gaya Desain)</option>
+                                        <option value="Force Light Mode">Force Light Mode</option>
+                                        <option value="Force Dark Mode">Force Dark Mode</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid-2">
+                                <div>
+                                    <label class="form-label required">Gaya Desain</label>
+                                    <select id="lb_designStyle" class="form-input">
+                                        <optgroup label="A. Archetype Brand">
+                                            <option value="Apple Style">Apple Style</option>
+                                            <option value="Stripe / Linear Style">Stripe / Linear Style</option>
+                                            <option value="Airbnb Style">Airbnb Style</option>
+                                            <option value="Notion Style">Notion Style</option>
+                                            <option value="Nike / Adidas Style">Nike / Adidas Style</option>
+                                            <option value="Tesla Style">Tesla Style</option>
+                                        </optgroup>
+                                        <optgroup label="B. Popular">
+                                            <option value="Clean & Minimalist" selected>Clean & Minimalist</option>
+                                            <option value="Modern SaaS">Modern SaaS</option>
+                                            <option value="Bold & High Conversion">Bold & High Conversion</option>
+                                            <option value="Elegant & Premium">Elegant & Premium</option>
+                                            <option value="Trust & Authority">Trust & Authority</option>
+                                            <option value="Dark Mode Style">Dark Mode Style</option>
+                                        </optgroup>
+                                        <optgroup label="C. Tech & Future">
+                                            <option value="Futuristic Cyberpunk">Futuristic Cyberpunk</option>
+                                            <option value="AI / SaaS Modern">AI / SaaS Modern</option>
+                                            <option value="Holographic & Glass">Holographic & Glass</option>
+                                            <option value="Abstract Gradient">Abstract Gradient</option>
+                                        </optgroup>
+                                        <optgroup label="D. Trending">
+                                            <option value="Bento Grid / Modular">Bento Grid / Modular</option>
+                                            <option value="Neobrutalism">Neobrutalism</option>
+                                            <option value="Glassmorphism">Glassmorphism</option>
+                                        </optgroup>
+                                        <optgroup label="E. Industry Specific">
+                                            <option value="Medical / Health">Medical / Health</option>
+                                            <option value="Real Estate">Real Estate</option>
+                                            <option value="Wedding / Event">Wedding / Event</option>
+                                            <option value="Finance / Bank">Finance / Bank</option>
+                                            <option value="Gamer / Neon">Gamer / Neon</option>
+                                            <option value="Organic & Natural">Organic & Natural</option>
+                                            <option value="Corporate">Corporate</option>
+                                        </optgroup>
+                                        <optgroup label="F. Mood & Vibe">
+                                            <option value="Playful & Fun">Playful & Fun</option>
+                                            <option value="Typography-Driven">Typography-Driven</option>
+                                            <option value="Retro / Vintage">Retro / Vintage</option>
+                                            <option value="Visual Storytelling">Visual Storytelling</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="form-label">Animasi Tombol</label>
+                                    <select id="lb_btnAnim" class="form-input">
+                                        <option value="Scale on Hover">Scale on Hover</option>
+                                        <option value="Glow Effect">Glow Effect</option>
+                                        <option value="Pulse">Pulse / Heartbeat</option>
+                                        <option value="Wiggle">Wiggle / Shake</option>
+                                        <option value="Static">Static (Tanpa Animasi)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="form-label">Jenis Font (Typography)</label>
+                                <select id="lb_font" class="form-input">
+                                    <option value="Modern Sans Serif">Modern Sans Serif</option>
+                                    <option value="Elegant Serif">Elegant Serif</option>
+                                    <option value="Monospace">Monospace</option>
+                                    <option value="Handwriting">Handwriting</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Section 6: Featured Content -->
+                        <div class="section-card">
+                            <h3 class="section-title">
+                                <span class="section-number">6</span>
+                                Featured Content
+                                <span class="section-badge">Opsional</span>
+                            </h3>
+                            <p class="lb-hint-text">Widget dan konten tambahan. Kosongkan jika tidak perlu.</p>
+                            
+                            <div class="form-grid-2">
+                                <div>
+                                    <label class="form-label">Video Embed URL</label>
+                                    <input type="url" id="lb_videoUrl" class="form-input" placeholder="URL video YouTube/Vimeo">
+                                </div>
+                                <div>
+                                    <label class="form-label">Countdown Text</label>
+                                    <input type="text" id="lb_countdown" class="form-input" placeholder="Contoh: Flash Sale berakhir!">
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid-2">
+                                <div>
+                                    <label class="form-label">Music Embed URL</label>
+                                    <input type="url" id="lb_musicUrl" class="form-input" placeholder="URL Spotify/Apple Music">
+                                </div>
+                                <div>
+                                    <label class="form-label">Donation Text</label>
+                                    <input type="text" id="lb_donation" class="form-input" placeholder="Teks untuk tombol donasi">
+                                </div>
+                            </div>
+                            
+                            <!-- Toggle Form Kontak -->
+                            <div style="margin-top: 16px;">
+                                <button type="button" id="lb_contactFormBtn" class="lb-toggle-btn selected" onclick="lb_toggleContactForm()">
+                                    <span class="toggle-icon">✓</span>
+                                    <span>TAMBAHKAN FORM KONTAK LANGSUNG</span>
+                                </button>
+                                <input type="hidden" id="lb_contactForm" value="Ya">
+                            </div>
+                        </div>
+
+                        <!-- Section 7: Platform Target -->
+                        <div class="section-card">
+                            <h3 class="section-title">
+                                <span class="section-number">7</span>
+                                Platform Target
+                                <span class="section-badge">Pilih platform deploy</span>
+                            </h3>
+                            <div class="lb-option-grid-2">
+                                <button type="button" class="lb-option-card selected" onclick="lb_selectOption(this, 'lb_platform', 'Scalev')">
+                                    <span>Scalev</span>
+                                </button>
+                                <button type="button" class="lb-option-card" onclick="lb_selectOption(this, 'lb_platform', 'WordPress')">
+                                    <span>WordPress</span>
+                                </button>
+                            </div>
+                            <input type="hidden" id="lb_platform" value="Scalev">
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="form-buttons">
+                            <button type="button" onclick="lb_resetForm()" class="btn-reset">Reset Form</button>
+                            <button type="submit" class="btn-primary">
+                                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                                <span>Generate Prompt</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Preview Panel -->
+                <div class="preview-section">
+                    <div class="preview-panel">
+                        <div class="preview-header">
+                            <div>
+                                <h4 class="preview-title">Result</h4>
+                                <p class="preview-subtitle">AI Prompt Output</p>
+                            </div>
+                            <button onclick="lb_copyPrompt()" class="btn-copy">
+                                <svg class="btn-icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                </svg>
+                                <span>Salin</span>
+                            </button>
+                        </div>
+                        <div id="lb_promptPreview" class="preview-content">
+                            <p class="preview-placeholder">Prompt akan muncul di sini setelah Anda mengklik "Generate Prompt"...</p>
+                        </div>
+                        <div class="preview-footer">
+                            <div id="lb_promptStatus" class="prompt-status hidden"></div>
+                            <button id="lb_finalActionBtn" onclick="lb_sendToAI()" disabled class="btn-action">
+                                <svg class="btn-icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                </svg>
+                                <span>Buat Link Bio Sekarang</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Reset Modal -->
+    <div id="resetModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <h3 class="modal-title">Reset Form?</h3>
+            <p class="modal-desc">Semua data akan dihapus.</p>
+            <div class="modal-buttons">
+                <button type="button" class="modal-btn modal-btn-cancel" onclick="closeResetModal()">Batal</button>
+                <button type="button" class="modal-btn modal-btn-confirm" onclick="lb_confirmReset()">Ya, Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="linkbio-engine.js"></script>
+    <!-- Firebase & Auth -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAxKoSrOhlIBV9xgtWKoDdimHqpxr1lm-k",
+            authDomain: "raihanstruggle-engine.firebaseapp.com",
+            projectId: "raihanstruggle-engine",
+            storageBucket: "raihanstruggle-engine.firebasestorage.app",
+            messagingSenderId: "421026076166",
+            appId: "1:421026076166:web:46b8485d492507a11f9587"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="auth-functions.js"></script>
+    <script>checkAuth('index.html'); loadTheme();</script>
+</body>
+</html>
