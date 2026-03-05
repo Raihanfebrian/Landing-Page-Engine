@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Tool v3.1 - Secured</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+        .toast-notification {
+            position: fixed; bottom: 30px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white; padding: 14px 24px; border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+            font-size: 14px; font-weight: 600; z-index: 9999; opacity: 0;
+            transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;
+            pointer-events: none;
+        }
+        .toast-notification.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen flex items-center justify-center p-4">
+
+    <!-- HALAMAN LOGIN -->
+    <div id="loginPage" class="w-full max-w-md bg-gray-800 rounded-2xl p-8 border border-gray-700 hidden">
+        <div class="text-center mb-6">
+            <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <span class="text-3xl">🔒</span>
+            </div>
+            <h1 class="text-2xl font-bold text-white mb-2">Admin Panel</h1>
+            <p class="text-gray-400 text-sm">Masukkan kredensial admin</p>
+        </div>
+        
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label class="block text-gray-300 text-sm mb-1">Email Admin</label>
+                <input type="email" id="loginEmail" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none" placeholder="admin@email.com" required>
+            </div>
+            <div>
+                <label class="block text-gray-300 text-sm mb-1">Password</label>
+                <input type="password" id="loginPass" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500">🔐 Masuk</button>
+        </form>
+        <p id="loginError" class="text-red-400 text-sm text-center mt-4 hidden">Email atau password salah!</p>
+        <p id="loginDenied" class="text-yellow-400 text-sm text-center mt-4 hidden">⚠️ Akses ditolak! Hanya admin yang diizinkan.</p>
+    </div>
+
+    <!-- HALAMAN ADMIN TOOL -->
+    <div id="adminPage" class="w-full max-w-md bg-gray-800 rounded-2xl p-8 border border-gray-700 hidden">
+        <div class="flex justify-between items-center mb-2">
+            <div>
+                <h1 class="text-2xl font-bold text-white">⚡ Admin Tool v3.1</h1>
+                <p class="text-gray-400 text-sm">Secured Access</p>
+            </div>
+            <button onclick="logout()" class="px-3 py-1 bg-red-600/20 text-red-400 text-xs rounded-lg hover:bg-red-600 hover:text-white transition">Logout</button>
+        </div>
+        <div class="mb-6"></div>
+        
+        <div class="mb-4">
+            <label class="block text-gray-300 text-sm mb-1">Email Pembeli</label>
+            <input type="email" id="checkEmail" onkeypress="handleEnter(event)" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none" placeholder="email@pembeli.com">
+        </div>
+        
+        <button type="button" onclick="checkUser()" id="checkBtn" class="w-full py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-500 mb-4">🔍 CEK STATUS USER</button>
+        
+        <div id="userStatus" class="hidden mb-4">
+            <div class="bg-gray-700 rounded-lg p-4">
+                <p class="text-white font-semibold mb-2">📋 Status User:</p>
+                <div id="statusContent"></div>
+            </div>
+        </div>
+        
+        <form id="createForm" class="space-y-4 hidden">
+            <div>
+                <label class="block text-gray-300 text-sm mb-1">Nama Pembeli</label>
+                <input type="text" id="name" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none" required>
+            </div>
+            <div>
+                <label class="block text-gray-300 text-sm mb-1">No. WhatsApp</label>
+                <input type="text" id="phone" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none" placeholder="08123456789">
+            </div>
+            <div>
+                <label class="block text-gray-300 text-sm mb-1">Paket</label>
+                <select id="plan" class="w-full px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600">
+                    <option value="lifetime">Lifetime (Garansi 1 Tahun)</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-gray-300 text-sm mb-1">Password <span id="passwordLabel" class="text-gray-500">(Wajib)</span></label>
+                <div class="flex gap-2">
+                    <input type="text" id="password" class="flex-1 px-4 py-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-blue-500 focus:outline-none">
+                    <button type="button" onclick="generatePassword()" class="px-4 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500">🔄</button>
+                </div>
+                <p class="text-gray-500 text-xs mt-1" id="passwordHint">Kirim password ini ke pembeli</p>
+            </div>
+            <button type="submit" id="submitBtn" class="w-full py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:opacity-90">🚀 CREATE / UPDATE USER</button>
+        </form>
+        
+        <!-- Success -->
+        <div id="successBox" class="hidden mt-4">
+            <div class="bg-green-900/30 border border-green-500/30 rounded-lg p-4">
+                <p class="text-green-400 font-bold text-lg mb-2" id="successTitle"></p>
+                <p class="text-gray-300 text-sm" id="successDetail"></p>
+                
+                <div class="mt-4 bg-gray-800 rounded-lg p-3 border border-gray-600">
+                    <p class="text-gray-400 text-xs mb-2">📋 Template untuk WhatsApp:</p>
+                    <p class="text-white text-sm whitespace-pre-line" id="waTemplate"></p>
+                </div>
+                
+                <div class="mt-3 grid grid-cols-2 gap-2">
+                    <button type="button" onclick="copyTemplate()" class="py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 font-semibold text-sm">📋 Copy</button>
+                    <a id="waLinkBtn" href="#" target="_blank" class="py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 font-semibold text-center block disabled:opacity-50 disabled:pointer-events-none text-sm">🚀 Kirim</a>
+                </div>
+            </div>
+        </div>
+        
+        <div id="errorBox" class="hidden mt-4">
+            <div class="bg-red-900/30 border border-red-500/30 rounded-lg p-4">
+                <p class="text-red-400 font-semibold">❌ Error!</p>
+                <p class="text-gray-400 text-sm mt-1" id="errorMsg"></p>
+            </div>
+        </div>
+        
+        <button type="button" onclick="resetAll()" class="mt-4 w-full py-2 bg-gray-700 text-gray-400 rounded-lg hover:bg-gray-600">🔄 Reset Form</button>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+    <script>
+        // ================== KONFIGURASI ADMIN ==================
+        // GANTI DENGAN EMAIL LU! HANYA EMAIL INI YANG BISA LOGIN.
+        const ADMIN_EMAIL = "raihanfebrian379@gmail.com"; 
+        // ======================================================
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAxKoSrOhlIBV9xgtWKoDdimHqpxr1lm-k",
+            authDomain: "raihanstruggle-engine.firebaseapp.com",
+            projectId: "raihanstruggle-engine",
+            storageBucket: "raihanstruggle-engine.firebasestorage.app",
+            messagingSenderId: "421026076166",
+            appId: "1:421026076166:web:46b8485d492507a11f9587"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        
+        // ============ AUTH STATE + ADMIN CHECK ============
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // Cek apakah email yang login sama dengan ADMIN_EMAIL
+                if (user.email === ADMIN_EMAIL) {
+                    // BERHASIL: Tampilin Admin Page
+                    document.getElementById('loginPage').classList.add('hidden');
+                    document.getElementById('adminPage').classList.remove('hidden');
+                    document.getElementById('loginDenied').classList.add('hidden');
+                    document.getElementById('loginError').classList.add('hidden');
+                } else {
+                    // GAGAL: Bukan Admin -> Logout paksa
+                    auth.signOut();
+                    document.getElementById('loginPage').classList.remove('hidden');
+                    document.getElementById('adminPage').classList.add('hidden');
+                    document.getElementById('loginDenied').classList.remove('hidden'); // Pesan ditolak
+                    document.getElementById('loginError').classList.add('hidden');
+                }
+            } else {
+                // User belum login
+                document.getElementById('loginPage').classList.remove('hidden');
+                document.getElementById('adminPage').classList.add('hidden');
+            }
+        });
+
+        // ============ LOGIN LOGIC ============
+        document.getElementById('loginForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPass').value;
+            
+            // Reset pesan error
+            document.getElementById('loginError').classList.add('hidden');
+            document.getElementById('loginDenied').classList.add('hidden');
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, pass);
+                // Kalau sukses, listener onAuthStateChanged di atas yang handle
+            } catch (err) {
+                document.getElementById('loginError').classList.remove('hidden');
+            }
+        });
+
+        function logout() { auth.signOut(); }
+
+        // ============ KODE ASLI v2.8 (TIDAK DIUBAH) ============
+        let existingDoc = null;
+        let actionType = 'create';
+        
+        function handleEnter(e) { if (e.key === 'Enter') checkUser(); }
+        
+        function generatePassword() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+            let p = '';
+            for (let i = 0; i < 8; i++) p += chars[Math.floor(Math.random() * chars.length)];
+            document.getElementById('password').value = p;
+        }
+        
+        function calcExpiry(plan, fromDate) {
+            const d = fromDate ? new Date(fromDate) : new Date();
+            d.setFullYear(d.getFullYear() + 1); 
+            return firebase.firestore.Timestamp.fromDate(d);
+        }
+        
+        function hideAll() {
+            document.getElementById('userStatus').classList.add('hidden');
+            document.getElementById('createForm').classList.add('hidden');
+            document.getElementById('successBox').classList.add('hidden');
+            document.getElementById('errorBox').classList.add('hidden');
+        }
+        
+        function resetAll() {
+            document.getElementById('checkEmail').value = '';
+            document.getElementById('name').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('password').value = '';
+            hideAll();
+            existingDoc = null;
+            actionType = 'create';
+        }
+        
+        async function checkUser() {
+            const email = document.getElementById('checkEmail').value.trim();
+            if (!email) return alert('Masukkan email!');
+            const btn = document.getElementById('checkBtn');
+            btn.disabled = true; btn.textContent = '⏳ Mengecek...'; hideAll();
+            
+            try {
+                const snap = await db.collection('subscriptions').where('email', '==', email).limit(10).get();
+                let authExists = false;
+                try { if ((await auth.fetchSignInMethodsForEmail(email)).length > 0) authExists = true; } catch (e) {}
+                
+                const passLabel = document.getElementById('passwordLabel');
+                const passHint = document.getElementById('passwordHint');
+                
+                if (snap.empty) {
+                    existingDoc = null; actionType = 'create';
+                    if (authExists) {
+                        document.getElementById('password').value = '';
+                        passLabel.textContent = '(Opsional)'; passHint.textContent = 'Kosongkan - user pakai password lama';
+                        document.getElementById('statusContent').innerHTML = '<p class="text-orange-400 font-semibold">⚠️ ZOMBIE ACCOUNT</p>';
+                    } else {
+                        generatePassword();
+                        passLabel.textContent = '(Wajib)'; passHint.textContent = 'Kirim password ini ke pembeli';
+                        document.getElementById('statusContent').innerHTML = '<p class="text-yellow-400 font-semibold">⚠️ Email belum terdaftar</p>';
+                    }
+                    document.getElementById('userStatus').classList.remove('hidden');
+                    document.getElementById('createForm').classList.remove('hidden');
+                } else {
+                    let active = null; snap.forEach(doc => { if(doc.data().isActive) active = doc; });
+                    existingDoc = active || snap.docs[0];
+                    actionType = active ? 'extend' : 'reactivate';
+                    const data = existingDoc.data();
+                    document.getElementById('name').value = data.name || '';
+                    document.getElementById('phone').value = data.phone || '';
+                    document.getElementById('password').value = '';
+                    passLabel.textContent = '(Opsional)'; passHint.textContent = 'Kosongkan untuk pakai password lama';
+                    document.getElementById('statusContent').innerHTML = `<p class="text-white"><strong>Nama:</strong> ${data.name||'-'}</p><p class="text-white"><strong>Status:</strong> ${active ? '<span class="text-green-400">AKTIF</span>' : '<span class="text-red-400">NON-AKTIF</span>'}</p>`;
+                    document.getElementById('userStatus').classList.remove('hidden');
+                    document.getElementById('createForm').classList.remove('hidden');
+                }
+            } catch (err) {
+                document.getElementById('errorBox').classList.remove('hidden');
+                document.getElementById('errorMsg').textContent = err.message;
+            }
+            btn.disabled = false; btn.textContent = '🔍 CEK STATUS USER';
+        }
+        
+        document.getElementById('createForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('checkEmail').value.trim();
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const pass = document.getElementById('password').value;
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.textContent = '⏳ Processing...';
+            hideAll();
+            
+            try {
+                let finalPassword = pass || '[PASSWORD LAMA]';
+                
+                if (actionType === 'create') {
+                    if (pass) { try { await auth.createUserWithEmailAndPassword(email, pass); } catch (authErr) { if (authErr.code !== 'auth/email-already-in-use') throw authErr; finalPassword = '[PASSWORD LAMA]'; } }
+                    await db.collection('subscriptions').add({ email, name, phone, plan: 'lifetime', isActive: true, expiryDate: calcExpiry('lifetime', null), createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                } else {
+                    await existingDoc.ref.update({ name, phone, plan: 'lifetime', isActive: true, expiryDate: calcExpiry('lifetime', null) });
+                }
+                
+                const titles = { 'create': '✅ User Dibuat!', 'extend': '✅ Diperpanjang!', 'reactivate': '✅ Diaktifkan!' };
+                document.getElementById('successTitle').textContent = titles[actionType];
+                document.getElementById('successDetail').innerHTML = 'Email: <strong>' + email + '</strong><br>Paket: <strong>Lifetime</strong>';
+                
+                // TEMPLATE WHATSAPP
+                let t = `Yeay! 🎉 Akun Anda Sudah Siap!
+
+Halo Kak ${name}! 🙌
+Terima kasih sudah menunggu. Akses akun kamu sudah siap dan bisa langsung digunakan.
+
+🔑 *Detail Login:*
+Email: ${email}
+Password: ${finalPassword === '[PASSWORD LAMA]' ? '(Gunakan password lama)' : finalPassword}
+
+👉 *Link Akses:*
+https://raihanstruggle-page-engine.vercel.app/
+
+⚠️ *Penting:*
+1. Segera ganti password kamu setelah login pertama kali biar aman.
+2. Jangan sebarkan data login ini ke siapa pun ya!
+
+Selamat berkreasi! 🚀 Semoga website atau landing page yang kamu buat bisa membantu bisnis digital kamu makin cuan dan sukses. 
+
+Kalau ada pertanyaan atau butuh bantuan, langsung chat admin aja, jangan sungkan!
+
+Salam,
+Raihan Struggle 💪`;
+                document.getElementById('waTemplate').textContent = t;
+                
+                const waBtn = document.getElementById('waLinkBtn');
+                let cleanPhone = phone.replace(/\D/g, '');
+                if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.substring(1);
+                
+                if (cleanPhone && cleanPhone.length > 5) {
+                    waBtn.href = `https://wa.me/${cleanPhone}`;
+                    waBtn.classList.remove('opacity-50', 'pointer-events-none');
+                } else {
+                    waBtn.href = "#";
+                    waBtn.classList.add('opacity-50', 'pointer-events-none');
+                }
+                
+                document.getElementById('successBox').classList.remove('hidden');
+                
+            } catch (err) {
+                document.getElementById('errorBox').classList.remove('hidden');
+                document.getElementById('errorMsg').textContent = err.message;
+            }
+            btn.disabled = false; btn.textContent = '🚀 CREATE / UPDATE USER';
+        });
+        
+        function showToast(msg) {
+            const old = document.querySelector('.toast-notification');
+            if (old) old.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification';
+            toast.innerHTML = `<svg style="width:20px;height:20px" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg><span>${msg}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2000);
+        }
+
+        function copyTemplate() {
+            navigator.clipboard.writeText(document.getElementById('waTemplate').textContent)
+                .then(() => showToast('Berhasil disalin!'))
+                .catch(err => console.error('Failed:', err));
+        }
+    </script>
+</body>
+</html>
