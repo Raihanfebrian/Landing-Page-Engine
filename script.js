@@ -10,6 +10,9 @@
 let lp_currentPrompt = "";
 let lp_selectedPlatform = "Scalev";
 let lp_selectedElements = [];
+let lp_isAutoGenerate = true; 
+
+const MAX_URL_LENGTH = 5500; 
 
 // ========================================
 // MAPPINGS LENGKAP - SESUAI ATM (FINAL)
@@ -36,7 +39,7 @@ const frameworkMap = {
     'The 3 Reason Why': 'The 3 Reason Why'
 };
 
-// Tone/Gaya Bahasa - FINAL (SUDAH DISESUAIKAN KONTEKS)
+// Tone/Gaya Bahasa - FINAL
 const toneMap = {
     'Friendly & Conversational (Santai tapi sopan)': 'Friendly & Conversational (Santai tapi sopan)',
     'Professional & Formal (Bisnis serius)': 'Professional & Formal (Bisnis serius)',
@@ -216,6 +219,47 @@ function lp_initPlatformDefault() {
 }
 
 // ========================================
+// PROMPT STATUS INDICATOR (SIMPLIFIED)
+// ========================================
+function lp_updatePromptStatus() {
+    const statusEl = document.getElementById('lp_promptStatus');
+    const btnText = document.querySelector('#finalActionBtn span');
+    const btnTextMobile = document.querySelector('#finalActionBtnMobile span');
+    
+    if (!statusEl) return;
+    
+    const promptLength = lp_currentPrompt.length;
+    
+    statusEl.classList.remove('hidden', 'auto', 'manual');
+    
+    if (promptLength <= MAX_URL_LENGTH) {
+        // ===== AUTO MODE =====
+        lp_isAutoGenerate = true;
+        statusEl.classList.add('auto');
+        statusEl.innerHTML = `
+            <span class="status-icon">✅</span>
+            <span class="status-text">Siap generate otomatis (${promptLength} karakter)</span>
+        `;
+        
+        if (btnText) btnText.textContent = 'Buat Landing Page Sekarang';
+        if (btnTextMobile) btnTextMobile.textContent = 'Buat Landing Page Sekarang';
+        
+    } else {
+        // ===== MANUAL MODE =====
+        lp_isAutoGenerate = false;
+        statusEl.classList.add('manual');
+        statusEl.innerHTML = `
+            <span class="status-icon">⚠️</span>
+            <span class="status-text">Prompt terlalu panjang (${promptLength} karakter) - perlu paste manual</span>
+        `;
+        
+        // GANTI TEKS TOMBOL
+        if (btnText) btnText.textContent = 'Copy & Buat Landing Page';
+        if (btnTextMobile) btnTextMobile.textContent = 'Copy & Buat Landing Page';
+    }
+}
+
+// ========================================
 // BONUS TOGGLE
 // ========================================
 function toggleBonus() {
@@ -338,6 +382,9 @@ function lp_executeReset() {
     lp_currentPrompt = "";
     lp_updatePreview();
     
+    const statusEl = document.getElementById('lp_promptStatus');
+    if (statusEl) statusEl.classList.add('hidden');
+    
     lp_updateActionButtons(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -424,12 +471,26 @@ function copyPrompt() {
 }
 
 // ========================================
-// SEND TO AI
+// SEND TO AI (UPDATED ACTIONS)
 // ========================================
 function sendToAI() {
     if (!lp_currentPrompt) return;
-    const encodedPrompt = encodeURIComponent(lp_currentPrompt);
-    window.open(`https://chat.z.ai/?q=${encodedPrompt}`, '_blank');
+    
+    if (lp_currentPrompt.length <= MAX_URL_LENGTH) {
+        // AUTO: Langsung buka Z Ai dengan prompt
+        const encodedPrompt = encodeURIComponent(lp_currentPrompt);
+        window.open(`https://chat.z.ai/?q=${encodedPrompt}`, '_blank');
+    } else {
+        // MANUAL: Copy dulu, baru buka Z Ai
+        navigator.clipboard.writeText(lp_currentPrompt).then(() => {
+            lp_showToast('📋 Prompt disalin! Paste di Z Ai lalu klik Send.');
+            window.open('https://chat.z.ai/', '_blank');
+        }).catch(err => {
+            console.error('Gagal copy:', err);
+            window.open('https://chat.z.ai/', '_blank');
+            lp_showToast('⚠️ Gagal copy, salin manual dari preview.');
+        });
+    }
 }
 
 // ========================================
@@ -447,7 +508,7 @@ function getValue(selectId, manualId) {
 }
 
 // ========================================
-// ANIMASI TYPING DENGAN AUTO-SCROLL
+// ANIMASI TYPING (SIMPLIFIED)
 // ========================================
 let lp_typingInterval = null;
 
@@ -466,7 +527,7 @@ function lp_animateTyping(text, elementId, elementIdMobile) {
     if (previewMobile) previewMobile.innerHTML = '';
     
     const speed = 1;
-    const chunkSize = 3;
+    const chunkSize = 5;
     
     lp_typingInterval = setInterval(() => {
         if (index < text.length) {
@@ -476,12 +537,10 @@ function lp_animateTyping(text, elementId, elementIdMobile) {
             
             if (preview) {
                 preview.innerHTML = displayedText.replace(/\n/g, '<br>');
-                // AUTO-SCROLL KE BAWAH
                 preview.scrollTop = preview.scrollHeight;
             }
             if (previewMobile) {
                 previewMobile.innerHTML = displayedText.replace(/\n/g, '<br>');
-                // AUTO-SCROLL KE BAWAH
                 previewMobile.scrollTop = previewMobile.scrollHeight;
             }
         } else {
@@ -489,13 +548,11 @@ function lp_animateTyping(text, elementId, elementIdMobile) {
             lp_typingInterval = null;
             lp_updateActionButtons(false);
             
-            // SCROLL KE PALING BAWAH SAAT SELESAI
-            if (preview) {
-                preview.scrollTop = preview.scrollHeight;
-            }
-            if (previewMobile) {
-                previewMobile.scrollTop = previewMobile.scrollHeight;
-            }
+            if (preview) preview.scrollTop = preview.scrollHeight;
+            if (previewMobile) previewMobile.scrollTop = previewMobile.scrollHeight;
+            
+            // PANGGIL STATUS HANYA SAAT ANIMASI SELESAI
+            lp_updatePromptStatus();
         }
     }, speed);
 }
@@ -589,7 +646,6 @@ if (lp_engineForm) {
             ? lp_selectedElements.map(el => sectionNamesMap[el] || el).join(', ') 
             : 'Default (tidak ada section tambahan)';
 
-        // Scarcity text
         let scarcityText = '';
         if (scarcityData.label === 'Tidak Ada') {
             scarcityText = 'Tidak Ada';
@@ -647,6 +703,7 @@ OUTPUT: Generate kode HTML utuh (single file) dengan Tailwind CSS, visual premiu
 
         setTimeout(() => {
             lp_animateTyping(lp_currentPrompt, 'promptPreview', 'promptPreviewMobile');
+            // HAPUS pemanggilan status di sini, biar ga muncul di awal
         }, 1500);
 
         if (window.innerWidth < 1024) {

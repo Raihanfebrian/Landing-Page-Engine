@@ -567,7 +567,7 @@ function ws_animateTyping(text, elementId, elementIdMobile) {
     if (previewMobile) previewMobile.innerHTML = '';
     
     const speed = 1;
-    const chunkSize = 3;
+    const chunkSize = 5;
     
     ws_typingInterval = setInterval(() => {
         if (index < text.length) {
