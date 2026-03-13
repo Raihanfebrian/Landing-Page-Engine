@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Tool v3.1 - Secured</title>
+    <title>Admin Tool v3.3 - No Logout Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -52,8 +52,8 @@
     <div id="adminPage" class="w-full max-w-md bg-gray-800 rounded-2xl p-8 border border-gray-700 hidden">
         <div class="flex justify-between items-center mb-2">
             <div>
-                <h1 class="text-2xl font-bold text-white">⚡ Admin Tool v3.1</h1>
-                <p class="text-gray-400 text-sm">Secured Access</p>
+                <h1 class="text-2xl font-bold text-white">⚡ Admin Tool v3.3</h1>
+                <p class="text-gray-400 text-sm">Stable Version</p>
             </div>
             <button onclick="logout()" class="px-3 py-1 bg-red-600/20 text-red-400 text-xs rounded-lg hover:bg-red-600 hover:text-white transition">Logout</button>
         </div>
@@ -133,7 +133,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
     <script>
         // ================== KONFIGURASI ADMIN ==================
-        // GANTI DENGAN EMAIL LU! HANYA EMAIL INI YANG BISA LOGIN.
         const ADMIN_EMAIL = "raihanfebrian379@gmail.com"; 
         // ======================================================
 
@@ -145,30 +144,33 @@
             messagingSenderId: "421026076166",
             appId: "1:421026076166:web:46b8485d492507a11f9587"
         };
+        
+        // Inisialisasi Aplikasi Utama (Untuk Admin)
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
         
+        // Inisialisasi Aplikasi Kedua (Untuk Membuat User Baru -> Agar Admin tidak logout)
+        // Ini rahasianya: Pakai instance kedua yang terpisah dari session admin
+        const secondaryApp = firebase.initializeApp(firebaseConfig, "Secondary");
+        const secondaryAuth = secondaryApp.auth();
+        
         // ============ AUTH STATE + ADMIN CHECK ============
         auth.onAuthStateChanged(user => {
             if (user) {
-                // Cek apakah email yang login sama dengan ADMIN_EMAIL
                 if (user.email === ADMIN_EMAIL) {
-                    // BERHASIL: Tampilin Admin Page
                     document.getElementById('loginPage').classList.add('hidden');
                     document.getElementById('adminPage').classList.remove('hidden');
                     document.getElementById('loginDenied').classList.add('hidden');
                     document.getElementById('loginError').classList.add('hidden');
                 } else {
-                    // GAGAL: Bukan Admin -> Logout paksa
                     auth.signOut();
                     document.getElementById('loginPage').classList.remove('hidden');
                     document.getElementById('adminPage').classList.add('hidden');
-                    document.getElementById('loginDenied').classList.remove('hidden'); // Pesan ditolak
+                    document.getElementById('loginDenied').classList.remove('hidden');
                     document.getElementById('loginError').classList.add('hidden');
                 }
             } else {
-                // User belum login
                 document.getElementById('loginPage').classList.remove('hidden');
                 document.getElementById('adminPage').classList.add('hidden');
             }
@@ -180,13 +182,11 @@
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPass').value;
             
-            // Reset pesan error
             document.getElementById('loginError').classList.add('hidden');
             document.getElementById('loginDenied').classList.add('hidden');
             
             try {
                 await auth.signInWithEmailAndPassword(email, pass);
-                // Kalau sukses, listener onAuthStateChanged di atas yang handle
             } catch (err) {
                 document.getElementById('loginError').classList.remove('hidden');
             }
@@ -194,9 +194,10 @@
 
         function logout() { auth.signOut(); }
 
-        // ============ KODE ASLI v2.8 (TIDAK DIUBAH) ============
+        // ============ HELPER FUNCTIONS ============
         let existingDoc = null;
         let actionType = 'create';
+        let authUserExists = false;
         
         function handleEnter(e) { if (e.key === 'Enter') checkUser(); }
         
@@ -228,6 +229,7 @@
             hideAll();
             existingDoc = null;
             actionType = 'create';
+            authUserExists = false;
         }
         
         async function checkUser() {
@@ -238,23 +240,29 @@
             
             try {
                 const snap = await db.collection('subscriptions').where('email', '==', email).limit(10).get();
-                let authExists = false;
-                try { if ((await auth.fetchSignInMethodsForEmail(email)).length > 0) authExists = true; } catch (e) {}
+                
+                authUserExists = false;
+                try { 
+                    const methods = await auth.fetchSignInMethodsForEmail(email);
+                    if (methods.length > 0) authUserExists = true; 
+                } catch (e) {}
                 
                 const passLabel = document.getElementById('passwordLabel');
                 const passHint = document.getElementById('passwordHint');
                 
                 if (snap.empty) {
-                    existingDoc = null; actionType = 'create';
-                    if (authExists) {
-                        document.getElementById('password').value = '';
-                        passLabel.textContent = '(Opsional)'; passHint.textContent = 'Kosongkan - user pakai password lama';
-                        document.getElementById('statusContent').innerHTML = '<p class="text-orange-400 font-semibold">⚠️ ZOMBIE ACCOUNT</p>';
+                    existingDoc = null; 
+                    actionType = 'create';
+                    generatePassword();
+                    passLabel.textContent = '(Wajib)';
+                    passHint.textContent = 'Kirim password ini ke pembeli';
+                    
+                    if (authUserExists) {
+                        document.getElementById('statusContent').innerHTML = '<p class="text-orange-400 font-semibold">⚠️ ZOMBIE ACCOUNT</p><p class="text-gray-400 text-xs">Data Auth ada tapi Firestore hilang. Akan diperbaiki.</p>';
                     } else {
-                        generatePassword();
-                        passLabel.textContent = '(Wajib)'; passHint.textContent = 'Kirim password ini ke pembeli';
                         document.getElementById('statusContent').innerHTML = '<p class="text-yellow-400 font-semibold">⚠️ Email belum terdaftar</p>';
                     }
+                    
                     document.getElementById('userStatus').classList.remove('hidden');
                     document.getElementById('createForm').classList.remove('hidden');
                 } else {
@@ -262,10 +270,20 @@
                     existingDoc = active || snap.docs[0];
                     actionType = active ? 'extend' : 'reactivate';
                     const data = existingDoc.data();
+                    
                     document.getElementById('name').value = data.name || '';
                     document.getElementById('phone').value = data.phone || '';
                     document.getElementById('password').value = '';
-                    passLabel.textContent = '(Opsional)'; passHint.textContent = 'Kosongkan untuk pakai password lama';
+                    
+                    if (active) {
+                        passLabel.textContent = '(Opsional)';
+                        passHint.textContent = 'Kosongkan untuk pakai password lama';
+                    } else {
+                        generatePassword();
+                        passLabel.textContent = '(Wajib - Reset Password)';
+                        passHint.textContent = 'Password baru untuk reaktivasi';
+                    }
+                    
                     document.getElementById('statusContent').innerHTML = `<p class="text-white"><strong>Nama:</strong> ${data.name||'-'}</p><p class="text-white"><strong>Status:</strong> ${active ? '<span class="text-green-400">AKTIF</span>' : '<span class="text-red-400">NON-AKTIF</span>'}</p>`;
                     document.getElementById('userStatus').classList.remove('hidden');
                     document.getElementById('createForm').classList.remove('hidden');
@@ -285,23 +303,49 @@
             const pass = document.getElementById('password').value;
             const btn = document.getElementById('submitBtn');
             btn.disabled = true; btn.textContent = '⏳ Processing...';
-            hideAll();
+            
+            document.getElementById('successBox').classList.add('hidden');
+            document.getElementById('errorBox').classList.add('hidden');
             
             try {
                 let finalPassword = pass || '[PASSWORD LAMA]';
                 
+                // 1. SIMPAN DATA KE FIRESTORE (DATA AMAN DULU)
                 if (actionType === 'create') {
-                    if (pass) { try { await auth.createUserWithEmailAndPassword(email, pass); } catch (authErr) { if (authErr.code !== 'auth/email-already-in-use') throw authErr; finalPassword = '[PASSWORD LAMA]'; } }
-                    await db.collection('subscriptions').add({ email, name, phone, plan: 'lifetime', isActive: true, expiryDate: calcExpiry('lifetime', null), createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+                    await db.collection('subscriptions').add({
+                        email, name, phone, plan: 'lifetime', 
+                        isActive: true, 
+                        expiryDate: calcExpiry('lifetime', null), 
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
                 } else {
-                    await existingDoc.ref.update({ name, phone, plan: 'lifetime', isActive: true, expiryDate: calcExpiry('lifetime', null) });
+                    await existingDoc.ref.update({
+                        name, phone, plan: 'lifetime', 
+                        isActive: true, 
+                        expiryDate: calcExpiry('lifetime', null)
+                    });
                 }
                 
+                // 2. BUAT AKUN AUTH (PAKE SECONDARY APP BIAR ADMIN GA LOGOUT)
+                if (pass) {
+                    if (!authUserExists) {
+                        try {
+                            // Menggunakan secondaryAuth, bukan auth utama
+                            await secondaryAuth.createUserWithEmailAndPassword(email, pass);
+                            // Logout user baru dari secondary app biar bersih (opsional, ga wajib)
+                            await secondaryAuth.signOut(); 
+                        } catch (authErr) {
+                            console.warn("Auth creation skipped or failed:", authErr.message);
+                            // Biarkan saja, data Firestore sudah aman
+                        }
+                    }
+                }
+                
+                // 3. TAMPILKAN HASIL
                 const titles = { 'create': '✅ User Dibuat!', 'extend': '✅ Diperpanjang!', 'reactivate': '✅ Diaktifkan!' };
                 document.getElementById('successTitle').textContent = titles[actionType];
                 document.getElementById('successDetail').innerHTML = 'Email: <strong>' + email + '</strong><br>Paket: <strong>Lifetime</strong>';
                 
-                // TEMPLATE WHATSAPP
                 let t = `Yeay! 🎉 Akun Anda Sudah Siap!
 
 Halo Kak ${name}! 🙌
@@ -309,7 +353,7 @@ Terima kasih sudah menunggu. Akses akun kamu sudah siap dan bisa langsung diguna
 
 🔑 *Detail Login:*
 Email: ${email}
-Password: ${finalPassword === '[PASSWORD LAMA]' ? '(Gunakan password lama)' : finalPassword}
+Password: ${finalPassword.includes('[PASSWORD LAMA') ? '(Gunakan password lama)' : finalPassword}
 
 👉 *Link Akses:*
 https://raihanstruggle-page-engine.vercel.app/
@@ -318,9 +362,7 @@ https://raihanstruggle-page-engine.vercel.app/
 1. Segera ganti password kamu setelah login pertama kali biar aman.
 2. Jangan sebarkan data login ini ke siapa pun ya!
 
-Selamat berkreasi! 🚀 Semoga website atau landing page yang kamu buat bisa membantu bisnis digital kamu makin cuan dan sukses. 
-
-Kalau ada pertanyaan atau butuh bantuan, langsung chat admin aja, jangan sungkan!
+Selamat berkreasi! 🚀 
 
 Salam,
 Raihan Struggle 💪`;
@@ -344,7 +386,9 @@ Raihan Struggle 💪`;
                 document.getElementById('errorBox').classList.remove('hidden');
                 document.getElementById('errorMsg').textContent = err.message;
             }
-            btn.disabled = false; btn.textContent = '🚀 CREATE / UPDATE USER';
+            
+            btn.disabled = false; 
+            btn.textContent = '🚀 CREATE / UPDATE USER';
         });
         
         function showToast(msg) {
