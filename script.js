@@ -662,7 +662,7 @@ ATURAN PENULISAN & LAYOUT (WAJIB DIPATUHI):
  ${layout.desc}
 2. GLOBAL STYLE: Wajib set 'body { overflow-x: hidden; }' untuk mencegah scroll horizontal pada tampilan mobile. Pastikan wrapper/container utama tidak melebihi lebar layar (100vw).
 3. FOOTER: DILARANG membuat section footer standar (Links/Menu/Sitemap) karena ini adalah Landing Page yang fokus penjualan. Cukup akhiri dengan Copyright notice kecil di bagian paling bawah atau padding kosong.
-4. TEMA VISUAL: Tema warna harus disesuaikan sepenuhnya dengan gaya desain yang dipilih.
+4. TEMA VISUAL: ${themeBg === 'Force Light Mode' ? 'Wajib Light Mode (Background terang, teks gelap).' : themeBg === 'Force Dark Mode' ? 'Wajib Dark Mode (Background gelap, teks terang).' : 'Sesuai gaya desain yang dipilih.'}
 5. HERO TYPE: ${heroType}
 6. STICKY CTA MOBILE: ${stickyCtaText}
 7. BUTTON STYLING: Teks tombol WAJIB KONSISTEN (Jangan berubah warna saat hover/klik). DILARANG menggunakan underline pada teks tombol. Gunakan '!important' pada properti warna teks dan text-decoration untuk memaksa style ini.
@@ -676,6 +676,7 @@ ATURAN PENULISAN & LAYOUT (WAJIB DIPATUHI):
 PROFIL PRODUK & MARKET:
 - Nama Produk: ${productName}
 - Kategori: ${productType}
+- Deskripsi & Benefit: ${description || 'Tidak ditentukan'}
 - Target Market: ${audience}
 - Tujuan Utama: ${goal}
 - Framework Utama: ${framework}
@@ -695,7 +696,7 @@ STRUKTUR HALAMAN (PLATFORM: ${platformOutputMap[platform] || platform}):
 2. BODY CONTENT: Mengikuti alur framework ${framework}.
 3. OBJECTION HANDLING BLOCK: Jawab keraguan "${objections || 'tidak ada'}" secara elegan. (Gunakan ini untuk section FAQ atau Reassurance).
 4. ADDITIONAL SECTIONS: Wajib masukkan section tambahan berikut: ${mappedSections}.
-5. TRUST ELEMENTS: Masukkan Social Proof dan Reassurance.
+5. TRUST ELEMENTS: ${lp_selectedElements.includes('Social Proof') ? 'Sertakan Social Proof untuk membangun kepercayaan.' : lp_selectedElements.includes('Testimonial') ? 'Sertakan Testimonial untuk membangun kredibilitas.' : 'Masukkan elemen trust sederhana (seperti logo partner atau badge keamanan).'}
 6. CONVERSION BLOCK: Kontras harga, bonus stack, dan urgensi (${scarcityData.label}).
 7. HIDDEN CTA: Pastikan ada micro-copy trust di bawah tombol.
 
